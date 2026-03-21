@@ -1,327 +1,102 @@
-// ================== INITIALIZATION ==================
-let currentPhotoEffect = 'normal';
+let currentPhotoEffect='normal',
+    profilePhoto=document.getElementById('profilePhoto'),
+    photoBox=document.querySelector('.photo-box'),
+    effectButtons=document.querySelectorAll('.effect-btn'),
+    contactForm=document.getElementById('contactForm'),
+    sections=document.querySelectorAll('.section');
 
-// ================== DOM ELEMENTS ==================
-const profilePhoto = document.getElementById('profilePhoto');
-const photoBox = document.querySelector('.photo-box');
-const effectButtons = document.querySelectorAll('.effect-btn');
-const contactForm = document.getElementById('contactForm');
-const sections = document.querySelectorAll('.section');
-
-// ================== PHOTO EFFECTS ==================
-function applyPhotoEffect(effect) {
-    currentPhotoEffect = effect;
-    
-    // Reset all effects first
-    profilePhoto.style.filter = 'none';
-    photoBox.style.boxShadow = '';
-    photoBox.style.borderColor = 'var(--neon-blue)';
-    
-    switch(effect) {
-        case 'normal':
-            // Default effect
-            photoBox.style.boxShadow = '0 0 50px var(--neon-blue), 0 0 100px rgba(0, 243, 255, 0.5)';
-            photoBox.style.borderColor = 'var(--neon-blue)';
-            break;
-            
-        case 'neon':
-            // Neon glow effect
-            profilePhoto.style.filter = 'brightness(1.2) contrast(1.1) saturate(1.3)';
-            photoBox.style.boxShadow = '0 0 70px var(--neon-pink), 0 0 140px rgba(255, 0, 255, 0.6), 0 0 200px rgba(0, 243, 255, 0.3)';
-            photoBox.style.borderColor = 'var(--neon-pink)';
-            break;
-            
-        case 'grayscale':
-            // Grayscale effect
-            profilePhoto.style.filter = 'grayscale(100%) brightness(1.1)';
-            photoBox.style.boxShadow = '0 0 40px var(--neon-green), 0 0 80px rgba(0, 255, 157, 0.5)';
-            photoBox.style.borderColor = 'var(--neon-green)';
-            break;
-    }
+// PHOTO EFFECT
+function applyPhotoEffect(e){
+    currentPhotoEffect=e;profilePhoto.style.filter='none';photoBox.style.boxShadow='';photoBox.style.borderColor='var(--neon-blue)';
+    if(e==='normal')photoBox.style.boxShadow='0 0 50px var(--neon-blue),0 0 100px rgba(0,243,255,.5)';
+    else if(e==='neon'){profilePhoto.style.filter='brightness(1.2) contrast(1.1) saturate(1.3)';photoBox.style.boxShadow='0 0 70px var(--neon-pink),0 0 140px rgba(255,0,255,.6),0 0 200px rgba(0,243,255,.3)';photoBox.style.borderColor='var(--neon-pink)';}
+    else if(e==='grayscale'){profilePhoto.style.filter='grayscale(100%) brightness(1.1)';photoBox.style.boxShadow='0 0 40px var(--neon-green),0 0 80px rgba(0,255,157,.5)';photoBox.style.borderColor='var(--neon-green)';}
 }
 
-// ================== EFFECT BUTTONS ==================
-effectButtons.forEach(button => {
-    button.addEventListener('click', function() {
-        // Remove active class from all buttons
-        effectButtons.forEach(btn => btn.classList.remove('active'));
-        
-        // Add active class to clicked button
-        this.classList.add('active');
-        
-        // Get effect from button id
-        const effect = this.id.replace('Mode', '').toLowerCase();
-        applyPhotoEffect(effect);
-        
-        // Show notification
-        showNotification(`${effect.toUpperCase()} mode activated!`);
-    });
+// EFFECT BUTTONS
+effectButtons.forEach(b=>b.addEventListener('click',function(){
+    effectButtons.forEach(btn=>btn.classList.remove('active'));this.classList.add('active');
+    applyPhotoEffect(this.id.replace('Mode','').toLowerCase());
+    showNotification(`${this.id.replace('Mode','').toUpperCase()} mode activated!`);
+}));
+
+// AUTO CYCLE
+let autoCycleInterval=setInterval(()=>{const arr=['normal','neon','grayscale'],i=(arr.indexOf(currentPhotoEffect)+1)%3;document.getElementById(arr[i]+'Mode').click();},10000);
+
+// TYPEWRITER
+(function typeWriter(){const t=document.querySelector('.hero h1'),txt=t.textContent;t.textContent='';let i=0;(function type(){if(i<txt.length){t.textContent+=txt[i++];setTimeout(type,100);}})();})();
+
+// SCROLL ANIMATIONS
+const observer=new IntersectionObserver(e=>{e.forEach(ent=>{ent.isIntersecting&&ent.target.classList.add('visible');})},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+sections.forEach(s=>observer.observe(s));
+
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));t&&window.scrollTo({top:t.offsetTop-80,behavior:'smooth'});}));
+
+// CONTACT FORM + COUNTER
+if(contactForm)contactForm.addEventListener('submit',e=>{e.preventDefault();
+    const n=contactForm.querySelector('input[type="text"]').value,
+          em=contactForm.querySelector('input[type="email"]').value,
+          m=contactForm.querySelector('textarea')?.value||'';
+    if(!n||!em||!m)return showNotification('Please fill all fields!','error');
+    showNotification('✨ Message sent successfully! I will contact you soon. ✨','success');
+    contactForm.reset();
+    document.getElementById('nameCounter')&&(document.getElementById('nameCounter').textContent='0/50');
+    document.getElementById('msgCounter')&&(document.getElementById('msgCounter').textContent='0/500');
 });
 
-// ================== AUTO CYCLE EFFECTS ==================
-function autoCycleEffects() {
-    const effects = ['normal', 'neon', 'grayscale'];
-    const currentIndex = effects.indexOf(currentPhotoEffect);
-    const nextIndex = (currentIndex + 1) % effects.length;
-    
-    // Find and click the corresponding button
-    const nextButton = document.getElementById(`${effects[nextIndex]}Mode`);
-    if (nextButton) {
-        nextButton.click();
-    }
+['nameInput','messageInput'].forEach(id=>{const el=document.getElementById(id),c=document.getElementById(id==='nameInput'?'nameCounter':'msgCounter');el&&c&&el.addEventListener('input',()=>{c.textContent=`${el.value.length}/${id==='nameInput'?50:500}`;c.style.color=el.value.length>=(id==='nameInput'?50:500)?'#ff00ff':'rgba(255,255,255,.5)';});});
+
+// NOTIFICATION
+function showNotification(msg,type='info'){
+    document.querySelector('.notification')?.remove();
+    const n=document.createElement('div');n.className='notification';n.textContent=msg;
+    if(type==='success')n.style.cssText='background:rgba(0,255,157,.1);border:1px solid var(--neon-green);box-shadow:0 0 20px var(--neon-green);';
+    else if(type==='error')n.style.cssText='background:rgba(255,85,85,.1);border:1px solid #ff5555;box-shadow:0 0 20px #ff5555;';
+    document.body.appendChild(n);setTimeout(()=>{n.style.opacity='1';n.style.transform='translateY(0)';},10);setTimeout(()=>{n.style.opacity='0';n.style.transform='translateY(-20px)';setTimeout(()=>n.remove(),300);},3000);
 }
 
-// Start auto-cycling every 10 seconds
-setInterval(autoCycleEffects, 10000);
+// IMAGE FALLBACK
+profilePhoto&&(profilePhoto.onerror=()=>{profilePhoto.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop';showNotification('Profile image not found. Using placeholder.','error');});
 
-// ================== TYPING ANIMATION ==================
-function typeWriterEffect() {
-    const title = document.querySelector('.hero h1');
-    const originalText = title.textContent;
-    title.textContent = '';
-    let charIndex = 0;
-    
-    function typeCharacter() {
-        if (charIndex < originalText.length) {
-            title.textContent += originalText.charAt(charIndex);
-            charIndex++;
-            setTimeout(typeCharacter, 100);
-        }
-    }
-    
-    // Start typing after a short delay
-    setTimeout(typeCharacter, 500);
-}
+// HOVER EFFECTS
+document.querySelectorAll('.project-card').forEach(c=>{c.addEventListener('mouseenter',()=>c.style.transform='translateY(-15px) scale(1.02)');c.addEventListener('mouseleave',()=>c.style.transform='translateY(-10px) scale(1)');});
+document.querySelectorAll('.skill-item').forEach(s=>{s.addEventListener('mouseenter',()=>s.style.transform='translateY(-10px) rotate(3deg)');s.addEventListener('mouseleave',()=>s.style.transform='translateY(-5px) rotate(0)');});
+document.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',()=>{b.style.transform='scale(0.95)';setTimeout(()=>b.style.transform='',200);}))
 
-// ================== SCROLL ANIMATIONS ==================
-function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    });
-    
-    // Observe all sections
-    sections.forEach(section => {
-        observer.observe(section);
-    });
-}
+// NAV SCROLL
+const nav=document.querySelector('.nav');window.addEventListener('scroll',()=>{if(window.scrollY>100){nav.style.padding='0.8rem 5%';nav.style.background='rgba(10,10,10,.98)';nav.style.boxShadow='0 5px 30px rgba(0,243,255,.15)';}else{nav.style.padding='1.2rem 5%';nav.style.background='rgba(10,10,10,.95)';nav.style.boxShadow='none';}})
 
-// ================== SMOOTH SCROLL ==================
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-}
+// CURSOR
+const cursor=document.createElement('div');cursor.className='cursor';document.body.appendChild(cursor);
+document.addEventListener('mousemove',e=>{cursor.style.left=e.clientX-10+'px';cursor.style.top=e.clientY-10+'px';});
+document.querySelectorAll('a,button,.btn,.project-card,.skill-item').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('active'));el.addEventListener('mouseleave',()=>cursor.classList.remove('active'));});
 
-// ================== CONTACT FORM ==================
-function initContactForm() {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Get form values
-        const name = this.querySelector('input[type="text"]').value;
-        const email = this.querySelector('input[type="email"]').value;
-        const message = this.querySelector('textarea').value;
-        
-        // Simple validation
-        if (!name || !email || !message) {
-            showNotification('Please fill all fields!', 'error');
-            return;
-        }
-        
-        // Simulate form submission
-        showNotification('Message sent successfully! I will contact you soon.', 'success');
-        
-        // Reset form
-        this.reset();
-        
-        // Log form data (in real app, you would send to server)
-        console.log('Form submitted:', { name, email, message });
-    });
-}
+// SCROLL PROGRESS
+const progressBar=document.createElement('div');progressBar.className='scroll-progress';document.body.appendChild(progressBar);
+window.addEventListener('scroll',()=>{const s=document.documentElement;progressBar.style.width=(s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%';});
 
-// ================== NOTIFICATION SYSTEM ==================
-function showNotification(message, type = 'info') {
-    // Remove existing notification
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
-    
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    
-    // Add type-specific styling
-    if (type === 'success') {
-        notification.style.background = 'rgba(0, 255, 157, 0.1)';
-        notification.style.borderColor = 'var(--neon-green)';
-        notification.style.boxShadow = '0 0 20px var(--neon-green)';
-    } else if (type === 'error') {
-        notification.style.background = 'rgba(255, 85, 85, 0.1)';
-        notification.style.borderColor = '#ff5555';
-        notification.style.boxShadow = '0 0 20px #ff5555';
-    }
-    
-    // Add to DOM
-    document.body.appendChild(notification);
-    
-    // Show notification
-    setTimeout(() => {
-        notification.style.opacity = '1';
-        notification.style.transform = 'translateY(0)';
-    }, 10);
-    
-    // Auto hide after 3 seconds
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transform = 'translateY(-20px)';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
+// PARTICLES BACKGROUND
+const canvas=document.getElementById('particlesCanvas');if(canvas){const ctx=canvas.getContext('2d');let p=[];function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}resize();window.addEventListener('resize',resize);for(let i=0;i<80;i++){p.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,radius:Math.random()*2+1,dx:(Math.random()-.5)*.5,dy:(Math.random()-.5)*.5,color:`hsl(${Math.random()*60+180},100%,60%)`});}function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);p.forEach(pt=>{pt.x+=pt.dx;pt.y+=pt.dy;if(pt.x<0||pt.x>canvas.width)pt.dx*=-1;if(pt.y<0||pt.y>canvas.height)pt.dy*=-1;ctx.beginPath();ctx.arc(pt.x,pt.y,pt.radius,0,2*Math.PI);ctx.fillStyle=pt.color;ctx.fill();});requestAnimationFrame(animate);}animate();}
 
-// ================== IMAGE FALLBACK ==================
-function initImageFallback() {
-    profilePhoto.onerror = function() {
-        // Use a placeholder image if original fails
-        this.src = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop';
-        showNotification('Profile image not found. Using placeholder.', 'error');
-    };
-}
+// 3D TILT
+photoBox&&(photoBox.addEventListener('mousemove',e=>{const r=photoBox.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,cX=r.width/2,cY=r.height/2;photoBox.style.transform=`perspective(1000px) rotateX(${(y-cY)/10}deg) rotateY(${(cX-x)/10}deg)`;}),photoBox.addEventListener('mouseleave',()=>{photoBox.style.transform='perspective(1000px) rotateX(0deg) rotateY(0deg)';}));
 
-// ================== HOVER EFFECTS ==================
-function initHoverEffects() {
-    // Project card hover effects
-    document.querySelectorAll('.project-card').forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-15px) scale(1.02)';
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(-10px) scale(1)';
-        });
-    });
-    
-    // Skill item hover effects
-    document.querySelectorAll('.skill-item').forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            item.style.transform = 'translateY(-8px) rotate(2deg)';
-        });
-        
-        item.addEventListener('mouseleave', () => {
-            item.style.transform = 'translateY(-5px) rotate(0)';
-        });
-    });
-    
-    // Button click animations
-    document.querySelectorAll('.btn').forEach(button => {
-        button.addEventListener('click', function() {
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 200);
-        });
-    });
-}
+// THEME TOGGLE
+const themeToggle=document.getElementById('themeToggle');let darkMode=true;
+themeToggle&&themeToggle.addEventListener('click',()=>{darkMode=!darkMode;document.body.classList.toggle('light',!darkMode);themeToggle.textContent=darkMode?'🌙':'☀️';showNotification(`${darkMode?'Dark':'Light'} mode activated!`);});
 
-// ================== NAVIGATION SCROLL EFFECT ==================
-function initNavScroll() {
-    const nav = document.querySelector('.nav');
-    
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-            nav.style.padding = '0.8rem 5%';
-            nav.style.background = 'rgba(10, 10, 10, 0.98)';
-            nav.style.boxShadow = '0 5px 30px rgba(0, 243, 255, 0.15)';
-        } else {
-            nav.style.padding = '1.2rem 5%';
-            nav.style.background = 'rgba(10, 10, 10, 0.95)';
-            nav.style.boxShadow = 'none';
-        }
-    });
-}
+// TIME GREETING
+function updateGreeting(){const g=document.getElementById('timeGreeting');if(g){const h=new Date().getHours();let t='';if(h<12)t='🌅 Good Morning';else if(h<17)t='☀️ Good Afternoon';else if(h<20)t='🌤️ Good Evening';else t='🌙 Good Night';g.innerHTML=`${t} 👋`;}}updateGreeting();setInterval(updateGreeting,3600000);
 
-// ================== INITIALIZE EVERYTHING ==================
-window.addEventListener('load', function() {
-    // Initialize all features
-    typeWriterEffect();
-    initScrollAnimations();
-    initSmoothScroll();
-    initContactForm();
-    initImageFallback();
-    initHoverEffects();
-    initNavScroll();
-    
-    // Apply default effect
-    applyPhotoEffect('normal');
-    
-    // Show welcome message
-    setTimeout(() => {
-        showNotification('Welcome to my portfolio! 👋', 'success');
-    }, 1000);
-});
+// FLOATING EMOJI
+const floatingEmoji=document.getElementById('floatingEmoji');if(floatingEmoji){const emojis=['✨','⭐','🌟','💫','⚡','🔥','💜','💙'];let i=0;floatingEmoji.addEventListener('click',()=>{i=(i+1)%emojis.length;floatingEmoji.textContent=emojis[i];showNotification(`Magic ${emojis[i]} activated!`);});setInterval(()=>{floatingEmoji.style.transform='translateY(-10px) rotate(15deg)';setTimeout(()=>floatingEmoji.style.transform='translateY(0) rotate(0deg)',200);},3000);}
 
-// ================== KEYBOARD SHORTCUTS ==================
-document.addEventListener('keydown', function(e) {
-    // Number keys 1, 2, 3 to switch effects
-    if (e.key >= '1' && e.key <= '3') {
-        const effects = ['normal', 'neon', 'grayscale'];
-        const index = parseInt(e.key) - 1;
-        if (effects[index]) {
-            document.getElementById(`${effects[index]}Mode`).click();
-        }
-    }
-    
-    // Space to toggle auto-cycle
-    if (e.code === 'Space') {
-        e.preventDefault();
-        autoCycleEffects();
-    }
-    
-    // Escape to reset to normal
-    if (e.code === 'Escape') {
-        document.getElementById('normalMode').click();
-    }
-});
+// SHORTCUTS
+document.addEventListener('keydown',e=>{if(e.key>='1'&&e.key<='3'){const arr=['normal','neon','grayscale'];document.getElementById(arr[parseInt(e.key)-1]+'Mode').click();}if(e.code==='Space'){e.preventDefault();autoCycleEffects();}if(e.code==='Escape')document.getElementById('normalMode').click();if(e.code==='KeyR'){applyPhotoEffect('normal');showNotification('Reset to normal mode!');}if(e.code==='KeyC'){autoCycleEffects();showNotification('Manual cycle triggered!');}});
 
-// ================== ADD NOTIFICATION STYLES ==================
-const notificationStyle = document.createElement('style');
-notificationStyle.textContent = `
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 1rem 2rem;
-        background: rgba(0, 243, 255, 0.1);
-        border: 1px solid var(--neon-blue);
-        border-radius: 10px;
-        color: var(--light);
-        backdrop-filter: blur(10px);
-        transform: translateY(-20px);
-        opacity: 0;
-        transition: all 0.3s ease;
-        z-index: 10001;
-        font-weight: 500;
-        box-shadow: var(--glow-blue);
-    }
-`;
-document.head.appendChild(notificationStyle);
+// NOTIFICATION STYLE
+const notificationStyle=document.createElement('style');notificationStyle.textContent=`.notification{position:fixed;top:20px;right:20px;padding:1rem 2rem;background:rgba(0,243,255,.1);border:1px solid var(--neon-blue);border-radius:10px;color:var(--light);backdrop-filter:blur(10px);transform:translateY(-20px);opacity:0;transition:all .3s ease;z-index:10001;font-weight:500;box-shadow:var(--glow-blue)}`;document.head.appendChild(notificationStyle);
+
+// INIT
+window.addEventListener('load',()=>{applyPhotoEffect('normal');setTimeout(()=>showNotification('✨ Welcome to my neon portfolio! ✨','success'),1000);});
