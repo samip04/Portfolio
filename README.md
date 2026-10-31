@@ -1,4 +1,4 @@
-🌐 Neon Portfolio Website
+🌐 My Portfolio Website
 
 A modern personal portfolio website built using HTML, CSS, and JavaScript featuring a futuristic neon user interface, smooth animations, and interactive components.
 The project demonstrates frontend development skills through responsive design, creative UI effects, and dynamic user interactions.
