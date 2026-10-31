@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samip Sapkota - Neon Portfolio</title>
+    <meta name="description" content="Samip Sapkota - Frontend Developer and Graphics Designer portfolio.">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Samip Sapkota - Portfolio</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
@@ -16,13 +19,21 @@
 </head>
 <body>
 
+<!-- LOADING SCREEN -->
+<div class="preloader" id="preloader">
+    <div class="preloader-logo">SAMIP</div>
+    <div class="preloader-bar"><span></span></div>
+</div>
+
 <!-- NAVIGATION -->
 <nav class="nav">
     <div class="logo">SAMIP</div>
-    <div class="nav-links">
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
         <a href="#home">Home</a>
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
+        <a href="#cv">CV</a>
         <a href="#contact">Contact</a>
     </div>
 </nav>
@@ -32,7 +43,7 @@
     <div class="hero-content">
         <h1>SAMIP SAPKOTA</h1>
         <h2>Frontend Developer</h2>
-        <p>Passionate developer creating beautiful, functional web applications.</p>
+        <p>Passionate developer and Graphics Designer creating functional web applications and Graphics</p>
 
         <div class="hero-btns">
             <a href="#projects" class="btn btn-primary">VIEW PROJECTS</a>
@@ -40,10 +51,10 @@
         </div>
 
         <div class="social-links">
-            <a href="https://github.com/samip04" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/samip-sapkota-20473533a/" target="_blank"><i class="fab fa-linkedin"></i></a>
-            <a href="https://instagram.com/samip_04" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/9779763500428" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://github.com/samip04" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/samip-sapkota-20473533a/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://instagram.com/samip_04" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/9779763500428" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
     </div>
 
@@ -59,10 +70,10 @@
 <section class="section" id="skills">
     <h2 class="section-title">MY SKILLS</h2>
     <div class="skills-container">
-        <div class="skill-item"><div class="skill-icon"><i class="fab fa-html5"></i></div><h3>HTML5</h3></div>
-        <div class="skill-item"><div class="skill-icon"><i class="fab fa-css3-alt"></i></div><h3>CSS3</h3></div>
+        <div class="skill-item"><div class="skill-icon"><i class="fab fa-html5"></i></div><h3>HTML</h3></div>
+        <div class="skill-item"><div class="skill-icon"><i class="fab fa-css3-alt"></i></div><h3>CSS</h3></div>
         <div class="skill-item"><div class="skill-icon"><i class="fab fa-js"></i></div><h3>JavaScript</h3></div>
-        <div class="skill-item"><div class="skill-icon"><i class="fab fa-react"></i></div><h3>React</h3></div>
+        <div class="skill-item"><div class="skill-icon"><i class="fas fa-pen-nib"></i></div><h3>Graphics Designing</h3></div>
         <div class="skill-item"><div class="skill-icon"><i class="fab fa-figma"></i></div><h3>Figma</h3></div>
         <div class="skill-item"><div class="skill-icon"><i class="fas fa-paint-brush"></i></div><h3>UI/UX</h3></div>
     </div>
@@ -76,19 +87,110 @@
             <h3>Animated Portfolio</h3>
             <p>Modern animated portfolio with neon UI.</p>
         </div>
-        <div class="project-card">
-            <h3>Landing Page</h3>
-            <p>Responsive high-conversion landing page.</p>
-        </div>
-        <div class="project-card">
-            <h3>Dashboard UI</h3>
-            <p>Interactive frontend dashboard.</p>
-        </div>
-        <div class="project-card">
+        <a class="project-card" href="https://samip04.github.io/GestureCam-Pro-/" target="_blank">
+            <h3>Gesture Control Camera</h3>
+            <p>Camera controlled with hand gestures.</p>
+            <span class="project-link">View Live <i class="fas fa-arrow-up-right-from-square"></i></span>
+        </a>
+        <a class="project-card" href="https://samip04.github.io/Weather-App/" target="_blank">
             <h3>Weather App</h3>
             <p>API based weather UI.</p>
+            <span class="project-link">View Live <i class="fas fa-arrow-up-right-from-square"></i></span>
+        </a>
+    </div>
+</section>
+
+<!-- CV -->
+<section class="section" id="cv">
+    <h2 class="section-title">MY CV</h2>
+
+    <!-- Print-only header (visible only in the downloaded CV) -->
+    <div class="cv-print-header">
+        <h1>SAMIP SAPKOTA</h1>
+        <h2>Frontend Developer &amp; Graphics Designer</h2>
+        <div class="cv-print-contact">
+            <span>Phone: +977 9763500428</span>
+            <span>Email: samipaaa63@gmail.com</span>
+            <span>Location: Kathmandu, Nepal</span>
+            <span>GitHub: github.com/samip04</span>
+            <span>LinkedIn: linkedin.com/in/samip-sapkota-20473533a</span>
+        </div>
+        <h3 class="cv-print-title">About Me</h3>
+        <p class="cv-print-about">Passionate developer and Graphics Designer creating functional web applications and graphics. Currently pursuing a Bachelor in Computer Engineering, with hands-on experience in graphics designing from an internship at Mobile Garage, and skilled in HTML, CSS, JavaScript, Figma and UI/UX design.</p>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="cv-stats">
+        <div class="cv-stat"><span class="cv-stat-num" data-count="3">0</span><span class="cv-stat-label">Months Internship</span></div>
+        <div class="cv-stat"><span class="cv-stat-num" data-count="3">0</span><span class="cv-stat-label">Projects</span></div>
+    </div>
+
+    <div class="cv-tabs">
+        <button class="cv-tab active" data-tab="cvEducation">Education</button>
+        <button class="cv-tab" data-tab="cvExperience">Experience</button>
+        <button class="cv-tab" data-tab="cvSkills">Skills</button>
+        <button class="cv-tab" data-tab="cvProjects">Projects</button>
+        <button class="cv-download" id="downloadCV"><i class="fas fa-download"></i> Download CV</button>
+    </div>
+
+    <div class="cv-content">
+        <!-- Education -->
+        <div class="cv-panel active" id="cvEducation">
+            <h3 class="cv-print-title">Education</h3>
+            <div class="cv-card">
+                <h3>Bachelor in Computer Engineering</h3>
+                <h4>Advanced College of Engineering and Management</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Kalanki, Kathmandu, Nepal</p>
+            </div>
+            <div class="cv-card">
+                <h3>+2 in Computer Science</h3>
+                <h4>BKVM College</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Pichara, Biratnagar, Nepal</p>
+            </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="cv-panel" id="cvExperience">
+            <h3 class="cv-print-title">Experience</h3>
+            <div class="cv-card">
+                <h3>Graphics Designing Intern</h3>
+                <h4>Mobile Garage</h4>
+                <p><i class="fas fa-map-marker-alt"></i> Pepsicola, Kathmandu, Nepal</p>
+                <p><i class="fas fa-clock"></i> 3 months internship</p>
+            </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="cv-panel" id="cvSkills">
+            <h3 class="cv-print-title">Skills</h3>
+            <div class="cv-card">
+                <h3 class="cv-hide-print">Technical &amp; Creative Skills</h3>
+                <div class="cv-tags">
+                    <span>HTML</span>
+                    <span>CSS</span>
+                    <span>JavaScript</span>
+                    <span>Graphics Designing</span>
+                    <span>Figma</span>
+                    <span>UI/UX</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="cv-panel" id="cvProjects">
+            <h3 class="cv-print-title">Projects</h3>
+            <div class="cv-card">
+                <h3 class="cv-hide-print">Projects</h3>
+                <div class="cv-tags">
+                    <span>Animated Portfolio</span>
+                    <a href="https://samip04.github.io/GestureCam-Pro-/" target="_blank">Gesture Control Camera</a>
+                    <a href="https://samip04.github.io/Weather-App/" target="_blank">Weather App</a>
+                </div>
+            </div>
         </div>
     </div>
+
+    <p class="cv-print-footer">Samip Sapkota Portfolio</p>
 </section>
 
 <!-- CONTACT -->
@@ -96,19 +198,20 @@
     <h2 class="section-title">GET IN TOUCH</h2>
     <div class="contact-container">
         <div class="contact-info">
-            <div class="contact-item"><i class="fab fa-whatsapp"></i><p>+977 9763500428</p></div>
-            <div class="contact-item"><i class="fas fa-envelope"></i><p>samipaaa63@gmail.com</p></div>
+            <a class="contact-item" href="https://wa.me/9779763500428" target="_blank"><i class="fab fa-whatsapp"></i><p>+977 9763500428</p></a>
+            <div class="contact-item" data-copy="samipaaa63@gmail.com" title="Click to copy"><i class="fas fa-envelope"></i><p>samipaaa63@gmail.com</p></div>
             <div class="contact-item"><i class="fas fa-map-marker-alt"></i><p>Kathmandu, Nepal</p></div>
+            <div class="contact-item"><i class="fas fa-clock"></i><p>Local time: <span id="localTime">--:--:--</span></p></div>
         </div>
 
         <form class="contact-form" id="contactForm">
             <div style="position:relative">
-                <input type="text" class="form-input" id="nameInput" placeholder="Your Name" required>
+                <input type="text" class="form-input" id="nameInput" placeholder="Your Name" maxlength="50" required>
                 <span class="char-counter" id="nameCounter">0/50</span>
             </div>
             <input type="email" class="form-input" placeholder="Your Email" required>
             <div style="position:relative">
-                <textarea class="form-input" id="messageInput" placeholder="Your Message" rows="5" required></textarea>
+                <textarea class="form-input" id="messageInput" placeholder="Your Message" rows="5" maxlength="500" required></textarea>
                 <span class="char-counter" id="msgCounter">0/500</span>
             </div>
             <button type="submit" class="btn btn-primary">SEND MESSAGE</button>
@@ -116,24 +219,18 @@
     </div>
 </section>
 
-<!-- EFFECT BUTTONS -->
-<div class="effect-controls">
-    <button class="effect-btn active" id="normalMode">NORMAL</button>
-    <button class="effect-btn" id="neonMode">NEON</button>
-    <button class="effect-btn" id="grayscaleMode">GRAY</button>
-</div>
-
 <!-- Enhanced Features Elements -->
 <div class="cursor"></div>
 <div class="scroll-progress"></div>
 <canvas id="particlesCanvas"></canvas>
-<button class="theme-toggle" id="themeToggle">🌙</button>
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+<button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
 <div class="time-greeting" id="timeGreeting"></div>
 <div class="floating-emoji" id="floatingEmoji">✨</div>
 
 <!-- FOOTER -->
 <footer>
-    <p>© 2024 Samip Sapkota | Designed with <i class="fas fa-heart" style="color: #ff00ff"></i></p>
+    <p>© <span id="year">2024</span> Samip Sapkota | Designed by Samip</p>
 </footer>
 
 <!-- JS -->
