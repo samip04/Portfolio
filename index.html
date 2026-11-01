@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Samip Sapkota - Frontend Developer and Graphics Designer portfolio.">
-    <meta name="theme-color" content="#0a0a0a">
+    <meta name="theme-color" content="#f3eee7">
+    <meta property="og:title" content="Samip Sapkota - Portfolio">
+    <meta property="og:description" content="Frontend Developer and Graphics Designer from Nepal.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
     <title>Samip Sapkota - Portfolio</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
+
+    <!-- Apply saved theme before the page paints -->
+    <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}</script>
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
@@ -15,22 +22,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <noscript><style>.reveal{opacity:1!important;transform:none!important}.preloader{display:none!important}</style></noscript>
 </head>
 <body>
 
 <!-- LOADING SCREEN -->
 <div class="preloader" id="preloader">
+    <div class="cube-wrap">
+        <div class="cube cube-lg">
+            <div class="face f-front"><i class="fas fa-code"></i></div>
+            <div class="face f-back"><i class="fas fa-pen-nib"></i></div>
+            <div class="face f-right"><i class="fab fa-js"></i></div>
+            <div class="face f-left"><i class="fab fa-figma"></i></div>
+            <div class="face f-top"><i class="fab fa-html5"></i></div>
+            <div class="face f-bottom"><i class="fab fa-css3-alt"></i></div>
+        </div>
+    </div>
     <div class="preloader-logo">SAMIP</div>
-    <div class="preloader-bar"><span></span></div>
 </div>
+
+<!-- BACKGROUND -->
+<div class="bg-blobs" id="bgBlobs" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+</div>
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- NAVIGATION -->
 <nav class="nav">
-    <div class="logo">SAMIP</div>
+    <a href="#home" class="logo" aria-label="Go to home">SAMIP</a>
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
     <div class="nav-links" id="navLinks">
         <a href="#home">Home</a>
+        <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
         <a href="#cv">CV</a>
@@ -41,6 +66,11 @@
 <!-- HERO -->
 <section class="hero" id="home">
     <div class="hero-content">
+        <div class="hero-tags">
+            <span class="open-badge"><span class="dot"></span>Open to work</span>
+            <span class="greet" id="timeGreeting"></span>
+        </div>
+        <span class="hero-hello">Hello, I'm</span>
         <h1>SAMIP SAPKOTA</h1>
         <h2>Frontend Developer</h2>
         <p>Passionate developer and Graphics Designer creating functional web applications and Graphics</p>
@@ -51,57 +81,123 @@
         </div>
 
         <div class="social-links">
-            <a href="https://github.com/samip04" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/samip-sapkota-20473533a/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            <a href="https://instagram.com/samip_04" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/9779763500428" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://github.com/samip04" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/samip-sapkota-20473533a/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://instagram.com/samip_04" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/9779763500428" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
     </div>
 
-    <div class="photo-container">
-        <div class="photo-box">
-            <img src="image.jpg" id="profilePhoto" alt="Samip Sapkota">
-            <div class="photo-overlay"></div>
+    <div class="hero-visual">
+        <div class="photo-stage" id="photoStage">
+            <div class="photo-card look-0" id="photoCard">
+                <div class="photo-frame">
+                    <img src="image.jpg" id="profilePhoto" alt="Samip Sapkota">
+                </div>
+                <div class="chip chip-1"><i class="fas fa-code"></i> Frontend</div>
+                <div class="chip chip-2"><i class="fas fa-pen-nib"></i> Graphics</div>
+            </div>
+
+            <div class="cube-wrap cw-a">
+                <div class="cube">
+                    <div class="face f-front"><i class="fas fa-code"></i></div>
+                    <div class="face f-back"><i class="fas fa-pen-nib"></i></div>
+                    <div class="face f-right"><i class="fab fa-js"></i></div>
+                    <div class="face f-left"><i class="fab fa-figma"></i></div>
+                    <div class="face f-top"><i class="fab fa-html5"></i></div>
+                    <div class="face f-bottom"><i class="fab fa-css3-alt"></i></div>
+                </div>
+            </div>
+            <div class="cube-wrap cw-b">
+                <div class="cube">
+                    <div class="face f-front"><i class="fab fa-figma"></i></div>
+                    <div class="face f-back"><i class="fab fa-js"></i></div>
+                    <div class="face f-right"><i class="fas fa-pen-nib"></i></div>
+                    <div class="face f-left"><i class="fas fa-code"></i></div>
+                    <div class="face f-top"><i class="fab fa-css3-alt"></i></div>
+                    <div class="face f-bottom"><i class="fab fa-html5"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="#about" class="scroll-down" aria-label="Scroll down"><i class="fas fa-chevron-down"></i></a>
+</section>
+
+<!-- ABOUT -->
+<section class="section reveal" id="about">
+    <h2 class="section-title">ABOUT ME</h2>
+    <div class="about-wrap">
+        <div class="card" data-tilt>
+            <p class="about-text">I'm Samip Sapkota, a Frontend Developer and Graphics Designer. I'm pursuing a Bachelor in Computer Engineering in Kathmandu and worked as a Graphics Designing Intern at Mobile Garage. I like building functional web apps, such as a gesture-controlled camera and a weather app, and turning ideas into clean designs with Figma and UI/UX.</p>
+        </div>
+        <div class="card" data-tilt>
+            <ul class="facts">
+                <li><i class="fas fa-location-dot"></i> Kathmandu, Nepal</li>
+                <li><i class="fas fa-graduation-cap"></i> Bachelor in Computer Engineering</li>
+                <li><i class="fas fa-briefcase"></i> Graphics Designing Intern, Mobile Garage</li>
+            </ul>
+            <div class="gh-stats" id="ghStats" hidden>
+                <div class="gh-box"><span class="gh-num" id="ghRepos">0</span><span class="gh-label">GitHub Repos</span></div>
+                <div class="gh-box"><span class="gh-num" id="ghFollowers">0</span><span class="gh-label">GitHub Followers</span></div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- SKILLS -->
-<section class="section" id="skills">
+<section class="section reveal" id="skills">
     <h2 class="section-title">MY SKILLS</h2>
     <div class="skills-container">
-        <div class="skill-item"><div class="skill-icon"><i class="fab fa-html5"></i></div><h3>HTML</h3></div>
-        <div class="skill-item"><div class="skill-icon"><i class="fab fa-css3-alt"></i></div><h3>CSS</h3></div>
-        <div class="skill-item"><div class="skill-icon"><i class="fab fa-js"></i></div><h3>JavaScript</h3></div>
-        <div class="skill-item"><div class="skill-icon"><i class="fas fa-pen-nib"></i></div><h3>Graphics Designing</h3></div>
-        <div class="skill-item"><div class="skill-icon"><i class="fab fa-figma"></i></div><h3>Figma</h3></div>
-        <div class="skill-item"><div class="skill-icon"><i class="fas fa-paint-brush"></i></div><h3>UI/UX</h3></div>
+        <div class="skill-item" data-tilt><div class="skill-icon"><i class="fab fa-html5"></i></div><h3>HTML</h3></div>
+        <div class="skill-item" data-tilt><div class="skill-icon"><i class="fab fa-css3-alt"></i></div><h3>CSS</h3></div>
+        <div class="skill-item" data-tilt><div class="skill-icon"><i class="fab fa-js"></i></div><h3>JavaScript</h3></div>
+        <div class="skill-item" data-tilt><div class="skill-icon"><i class="fas fa-pen-nib"></i></div><h3>Graphics Designing</h3></div>
+        <div class="skill-item" data-tilt><div class="skill-icon"><i class="fab fa-figma"></i></div><h3>Figma</h3></div>
+        <div class="skill-item" data-tilt><div class="skill-icon"><i class="fas fa-paint-brush"></i></div><h3>UI/UX</h3></div>
     </div>
 </section>
 
-<!-- PROJECTS -->
-<section class="section" id="projects">
+<!-- PROJECTS (3D CAROUSEL) -->
+<section class="section reveal" id="projects">
     <h2 class="section-title">MY PROJECTS</h2>
-    <div class="projects-grid">
-        <div class="project-card">
-            <h3>Animated Portfolio</h3>
-            <p>Modern animated portfolio with neon UI.</p>
+    <div class="carousel" id="carousel">
+        <div class="ring" id="ring">
+            <div class="slide">
+                <div class="p-card">
+                    <div class="p-icon" style="--c:var(--indigo)"><i class="fas fa-wand-magic-sparkles"></i></div>
+                    <h3>Animated Portfolio</h3>
+                    <p>Modern animated portfolio with 3D UI.</p>
+                    <span class="p-link p-here">You are here</span>
+                </div>
+            </div>
+            <a class="slide" href="https://samip04.github.io/GestureCam-Pro-/" target="_blank" rel="noopener" draggable="false">
+                <div class="p-card">
+                    <div class="p-icon" style="--c:var(--coral)"><i class="fas fa-hand"></i></div>
+                    <h3>Gesture Control Camera</h3>
+                    <p>Camera controlled with hand gestures.</p>
+                    <span class="p-link">View Live <i class="fas fa-arrow-up-right-from-square"></i></span>
+                </div>
+            </a>
+            <a class="slide" href="https://samip04.github.io/Weather-App/" target="_blank" rel="noopener" draggable="false">
+                <div class="p-card">
+                    <div class="p-icon" style="--c:var(--mint)"><i class="fas fa-cloud-sun"></i></div>
+                    <h3>Weather App</h3>
+                    <p>API based weather UI.</p>
+                    <span class="p-link">View Live <i class="fas fa-arrow-up-right-from-square"></i></span>
+                </div>
+            </a>
         </div>
-        <a class="project-card" href="https://samip04.github.io/GestureCam-Pro-/" target="_blank">
-            <h3>Gesture Control Camera</h3>
-            <p>Camera controlled with hand gestures.</p>
-            <span class="project-link">View Live <i class="fas fa-arrow-up-right-from-square"></i></span>
-        </a>
-        <a class="project-card" href="https://samip04.github.io/Weather-App/" target="_blank">
-            <h3>Weather App</h3>
-            <p>API based weather UI.</p>
-            <span class="project-link">View Live <i class="fas fa-arrow-up-right-from-square"></i></span>
-        </a>
+    </div>
+    <div class="car-controls">
+        <button class="car-btn" id="carPrev" aria-label="Previous project"><i class="fas fa-chevron-left"></i></button>
+        <div class="car-dots" id="carDots"></div>
+        <button class="car-btn" id="carNext" aria-label="Next project"><i class="fas fa-chevron-right"></i></button>
     </div>
 </section>
 
 <!-- CV -->
-<section class="section" id="cv">
+<section class="section reveal" id="cv">
     <h2 class="section-title">MY CV</h2>
 
     <!-- Print-only header (visible only in the downloaded CV) -->
@@ -121,8 +217,8 @@
 
     <!-- Quick stats -->
     <div class="cv-stats">
-        <div class="cv-stat"><span class="cv-stat-num" data-count="3">0</span><span class="cv-stat-label">Months Internship</span></div>
-        <div class="cv-stat"><span class="cv-stat-num" data-count="3">0</span><span class="cv-stat-label">Projects</span></div>
+        <div class="cv-stat" data-tilt><span class="cv-stat-num" data-count="3">0</span><span class="cv-stat-label">Months Internship</span></div>
+        <div class="cv-stat" data-tilt><span class="cv-stat-num" data-count="3">0</span><span class="cv-stat-label">Projects</span></div>
     </div>
 
     <div class="cv-tabs">
@@ -137,12 +233,12 @@
         <!-- Education -->
         <div class="cv-panel active" id="cvEducation">
             <h3 class="cv-print-title">Education</h3>
-            <div class="cv-card">
+            <div class="cv-card" data-tilt>
                 <h3>Bachelor in Computer Engineering</h3>
                 <h4>Advanced College of Engineering and Management</h4>
                 <p><i class="fas fa-map-marker-alt"></i> Kalanki, Kathmandu, Nepal</p>
             </div>
-            <div class="cv-card">
+            <div class="cv-card" data-tilt>
                 <h3>+2 in Computer Science</h3>
                 <h4>BKVM College</h4>
                 <p><i class="fas fa-map-marker-alt"></i> Pichara, Biratnagar, Nepal</p>
@@ -152,7 +248,7 @@
         <!-- Experience -->
         <div class="cv-panel" id="cvExperience">
             <h3 class="cv-print-title">Experience</h3>
-            <div class="cv-card">
+            <div class="cv-card" data-tilt>
                 <h3>Graphics Designing Intern</h3>
                 <h4>Mobile Garage</h4>
                 <p><i class="fas fa-map-marker-alt"></i> Pepsicola, Kathmandu, Nepal</p>
@@ -163,7 +259,7 @@
         <!-- Skills -->
         <div class="cv-panel" id="cvSkills">
             <h3 class="cv-print-title">Skills</h3>
-            <div class="cv-card">
+            <div class="cv-card" data-tilt>
                 <h3 class="cv-hide-print">Technical &amp; Creative Skills</h3>
                 <div class="cv-tags">
                     <span>HTML</span>
@@ -179,12 +275,12 @@
         <!-- Projects -->
         <div class="cv-panel" id="cvProjects">
             <h3 class="cv-print-title">Projects</h3>
-            <div class="cv-card">
+            <div class="cv-card" data-tilt>
                 <h3 class="cv-hide-print">Projects</h3>
                 <div class="cv-tags">
                     <span>Animated Portfolio</span>
-                    <a href="https://samip04.github.io/GestureCam-Pro-/" target="_blank">Gesture Control Camera</a>
-                    <a href="https://samip04.github.io/Weather-App/" target="_blank">Weather App</a>
+                    <a href="https://samip04.github.io/GestureCam-Pro-/" target="_blank" rel="noopener">Gesture Control Camera</a>
+                    <a href="https://samip04.github.io/Weather-App/" target="_blank" rel="noopener">Weather App</a>
                 </div>
             </div>
         </div>
@@ -194,39 +290,45 @@
 </section>
 
 <!-- CONTACT -->
-<section class="section" id="contact">
+<section class="section reveal" id="contact">
     <h2 class="section-title">GET IN TOUCH</h2>
     <div class="contact-container">
         <div class="contact-info">
-            <a class="contact-item" href="https://wa.me/9779763500428" target="_blank"><i class="fab fa-whatsapp"></i><p>+977 9763500428</p></a>
-            <div class="contact-item" data-copy="samipaaa63@gmail.com" title="Click to copy"><i class="fas fa-envelope"></i><p>samipaaa63@gmail.com</p></div>
-            <div class="contact-item"><i class="fas fa-map-marker-alt"></i><p>Kathmandu, Nepal</p></div>
-            <div class="contact-item"><i class="fas fa-clock"></i><p>Local time: <span id="localTime">--:--:--</span></p></div>
+            <a class="contact-item" data-tilt href="https://wa.me/9779763500428" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i><p>+977 9763500428</p></a>
+            <div class="contact-item" data-tilt data-copy="samipaaa63@gmail.com" title="Click to copy"><i class="fas fa-envelope"></i><p>samipaaa63@gmail.com</p></div>
+            <div class="contact-item" data-tilt><i class="fas fa-map-marker-alt"></i><p>Kathmandu, Nepal</p></div>
+            <div class="contact-item" data-tilt><i class="fas fa-clock"></i><p>Local time: <span id="localTime">--:--:--</span></p></div>
         </div>
 
         <form class="contact-form" id="contactForm">
-            <div style="position:relative">
+            <div class="field">
                 <input type="text" class="form-input" id="nameInput" placeholder="Your Name" maxlength="50" required>
                 <span class="char-counter" id="nameCounter">0/50</span>
             </div>
-            <input type="email" class="form-input" placeholder="Your Email" required>
-            <div style="position:relative">
+            <input type="email" class="form-input" id="emailInput" placeholder="Your Email" required>
+            <div class="field">
                 <textarea class="form-input" id="messageInput" placeholder="Your Message" rows="5" maxlength="500" required></textarea>
                 <span class="char-counter" id="msgCounter">0/500</span>
             </div>
-            <button type="submit" class="btn btn-primary">SEND MESSAGE</button>
+            <!-- Spam trap: real visitors never see or fill this -->
+            <input type="text" id="honeyInput" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0">
+            <button type="submit" class="btn btn-primary" id="sendBtn">SEND MESSAGE</button>
         </form>
     </div>
 </section>
 
-<!-- Enhanced Features Elements -->
-<div class="cursor"></div>
-<div class="scroll-progress"></div>
-<canvas id="particlesCanvas"></canvas>
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+<!-- FLOATING CONTROLS -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+<button class="palette-btn" id="paletteBtn" aria-label="Open command palette"><i class="fas fa-terminal"></i></button>
 <button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-arrow-up"></i></button>
-<div class="time-greeting" id="timeGreeting"></div>
-<div class="floating-emoji" id="floatingEmoji">✨</div>
+
+<div class="palette" id="palette" hidden>
+    <div class="palette-box">
+        <input type="text" id="paletteInput" placeholder="Type a command or search..." autocomplete="off" aria-label="Command palette">
+        <ul id="paletteList"></ul>
+        <p class="palette-hint">↑↓ to move · Enter to run · Esc to close</p>
+    </div>
+</div>
 
 <!-- FOOTER -->
 <footer>
