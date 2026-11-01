@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Samip Sapkota - Frontend Developer and Graphics Designer portfolio.">
-    <meta name="theme-color" content="#f3eee7">
+    <meta name="theme-color" content="#12131b">
     <meta property="og:title" content="Samip Sapkota - Portfolio">
     <meta property="og:description" content="Frontend Developer and Graphics Designer from Nepal.">
     <meta property="og:type" content="website">
@@ -12,8 +12,8 @@
     <title>Samip Sapkota - Portfolio</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
 
-    <!-- Apply saved theme before the page paints -->
-    <script>try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}</script>
+    <!-- Dark is default. Only switch to light if the visitor chose light before -->
+    <script>try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.remove('dark');}catch(e){}</script>
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
