@@ -12,8 +12,8 @@
     <title>Samip Sapkota - Portfolio</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
 
-    <!-- Dark is default. Only switch to light if the visitor chose light before -->
-    <script>try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.remove('dark');}catch(e){}</script>
+    <!-- Dark is default. Light only if the visitor chose it (new key: theme-v2) -->
+    <script>try{if(localStorage.getItem('theme-v2')==='light')document.documentElement.classList.remove('dark');}catch(e){}</script>
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
