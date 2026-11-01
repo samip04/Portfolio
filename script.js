@@ -212,6 +212,7 @@ function updateGreeting(){
 updateGreeting();setInterval(updateGreeting,3600000);
 
 // ---------- CONTACT FORM (DELIVERED TO YOUR EMAIL VIA FORMSUBMIT) ----------
+// After activating, you can replace this with the random alias FormSubmit gives you
 const RECEIVER_EMAIL='samipaaa63@gmail.com';
 ['nameInput','messageInput'].forEach(id=>{
     const el=document.getElementById(id),c=document.getElementById(id==='nameInput'?'nameCounter':'msgCounter'),max=id==='nameInput'?50:500;
@@ -248,10 +249,7 @@ if(contactForm){
                 throw new Error('Not delivered');
             }
         }catch(err){
-            showNotification('Could not send directly. Opening your email app instead...','error');
-            const subject=encodeURIComponent('Portfolio message from '+name);
-            const body=encodeURIComponent(message+'\n\nFrom: '+name+' ('+email+')');
-            setTimeout(()=>{window.location.href='mailto:'+RECEIVER_EMAIL+'?subject='+subject+'&body='+body;},1200);
+            showNotification('Could not send. Please try again or WhatsApp me.','error');
         }finally{
             sendBtn.disabled=false;sendBtn.textContent=label;
         }
@@ -281,7 +279,7 @@ photoFrame&&photoFrame.addEventListener('click',e=>{
     }
 });
 
-// ---------- THEME TOGGLE (REMEMBERS YOUR CHOICE) ----------
+// ---------- THEME TOGGLE (DARK DEFAULT, REMEMBERS CHOICE) ----------
 const themeToggle=document.getElementById('themeToggle');
 function syncThemeIcon(){
     const dark=document.documentElement.classList.contains('dark');
@@ -291,7 +289,7 @@ function syncThemeIcon(){
 syncThemeIcon();
 themeToggle.addEventListener('click',()=>{
     const dark=document.documentElement.classList.toggle('dark');
-    try{localStorage.setItem('theme',dark?'dark':'light');}catch(err){}
+    try{localStorage.setItem('theme-v2',dark?'dark':'light');}catch(err){}
     syncThemeIcon();
     showNotification(dark?'Dark mode activated!':'Light mode activated!');
 });
