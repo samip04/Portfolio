@@ -1,26 +1,62 @@
-let currentPhotoEffect='normal',
-    profilePhoto=document.getElementById('profilePhoto'),
-    photoBox=document.querySelector('.photo-box'),
-    contactForm=document.getElementById('contactForm'),
-    sections=document.querySelectorAll('.section'),
-    reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const profilePhoto=document.getElementById('profilePhoto'),
+      photoCard=document.getElementById('photoCard'),
+      photoStage=document.getElementById('photoStage'),
+      contactForm=document.getElementById('contactForm'),
+      reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      canHover=window.matchMedia&&window.matchMedia('(hover: hover)').matches;
 
-// PHOTO EFFECT
-function applyPhotoEffect(e){
-    currentPhotoEffect=e;profilePhoto.style.filter='none';photoBox.style.boxShadow='';photoBox.style.borderColor='var(--neon-blue)';
-    if(e==='normal')photoBox.style.boxShadow='0 0 50px var(--neon-blue),0 0 100px rgba(0,243,255,.5)';
-    else if(e==='neon'){profilePhoto.style.filter='brightness(1.2) contrast(1.1) saturate(1.3)';photoBox.style.boxShadow='0 0 70px var(--neon-pink),0 0 140px rgba(255,0,255,.6),0 0 200px rgba(0,243,255,.3)';photoBox.style.borderColor='var(--neon-pink)';}
-    else if(e==='grayscale'){profilePhoto.style.filter='grayscale(100%) brightness(1.1)';photoBox.style.boxShadow='0 0 40px var(--neon-green),0 0 80px rgba(0,255,157,.5)';photoBox.style.borderColor='var(--neon-green)';}
+// ---------- TOAST NOTIFICATION ----------
+function showNotification(msg,type='info'){
+    document.querySelector('.toast')?.remove();
+    const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
+    document.body.appendChild(t);
+    setTimeout(()=>{t.style.opacity='1';t.style.transform='translate(-50%,0)';},10);
+    setTimeout(()=>{t.style.opacity='0';t.style.transform='translate(-50%,20px)';setTimeout(()=>t.remove(),300);},3200);
 }
 
-// AUTO CYCLE (every 3 seconds)
-function autoCycleEffects(){const arr=['normal','neon','grayscale'],i=(arr.indexOf(currentPhotoEffect)+1)%3;applyPhotoEffect(arr[i]);}
-let autoCycleInterval=setInterval(autoCycleEffects,3000);
+// ---------- PHOTO LOOK AUTO-SWITCH (every 3 seconds) ----------
+let look=0;
+setInterval(()=>{
+    look=(look+1)%3;
+    photoCard.classList.remove('look-0','look-1','look-2');
+    photoCard.classList.add('look-'+look);
+},3000);
 
-// TYPEWRITER
+// ---------- 3D TILT ON THE PHOTO ----------
+if(photoStage&&canHover&&!reduceMotion){
+    photoStage.addEventListener('mousemove',e=>{
+        const r=photoStage.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+        photoCard.style.transform=`rotateX(${(.5-py)*18}deg) rotateY(${(px-.5)*22}deg)`;
+    });
+    photoStage.addEventListener('mouseleave',()=>{photoCard.style.transform='';});
+}
+
+// ---------- 3D TILT ON CARDS ----------
+if(canHover&&!reduceMotion){
+    document.querySelectorAll('[data-tilt]').forEach(el=>{
+        el.addEventListener('mousemove',e=>{
+            const r=el.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+            el.style.transform=`perspective(900px) rotateX(${(.5-py)*12}deg) rotateY(${(px-.5)*14}deg) translateZ(8px)`;
+            el.style.setProperty('--mx',(px*100)+'%');
+            el.style.setProperty('--my',(py*100)+'%');
+        });
+        el.addEventListener('mouseleave',()=>{el.style.transform='';});
+    });
+}
+
+// ---------- BACKGROUND PARALLAX ----------
+const blobs=document.getElementById('bgBlobs');
+if(blobs&&canHover&&!reduceMotion){
+    document.addEventListener('mousemove',e=>{
+        const dx=(e.clientX/window.innerWidth-.5)*40,dy=(e.clientY/window.innerHeight-.5)*40;
+        blobs.style.transform=`translate(${dx}px,${dy}px)`;
+    });
+}
+
+// ---------- TYPEWRITER NAME ----------
 (function typeWriter(){const t=document.querySelector('.hero h1'),txt=t.textContent;t.textContent='';let i=0;(function type(){if(i<txt.length){t.textContent+=txt[i++];setTimeout(type,100);}})();})();
 
-// ROTATING ROLE
+// ---------- ROTATING ROLE ----------
 const roleEl=document.querySelector('.hero h2');
 if(roleEl){
     const roles=['Frontend Developer','Graphics Designer'];let r=0;
@@ -30,35 +66,90 @@ if(roleEl){
     },3500);
 }
 
-// SCROLL ANIMATIONS
-const observer=new IntersectionObserver(e=>{e.forEach(ent=>{ent.isIntersecting&&ent.target.classList.add('visible');})},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
-sections.forEach(s=>observer.observe(s));
+// ---------- SCROLL REVEAL ----------
+const revealObserver=new IntersectionObserver(entries=>{
+    entries.forEach(ent=>{ent.isIntersecting&&ent.target.classList.add('in');});
+},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.reveal').forEach(s=>revealObserver.observe(s));
 
-// SMOOTH SCROLL
-document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));t&&window.scrollTo({top:t.offsetTop-80,behavior:'smooth'});}));
+// ---------- SMOOTH SCROLL (ALSO THE SAMIP LOGO -> HOME) ----------
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    t&&window.scrollTo({top:t.offsetTop-80,behavior:'smooth'});
+}));
 
-// MOBILE MENU
+// ---------- MOBILE MENU ----------
 const menuToggle=document.getElementById('menuToggle'),navLinks=document.getElementById('navLinks');
 menuToggle&&menuToggle.addEventListener('click',()=>navLinks.classList.toggle('open'));
 navLinks&&navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
 
-// ACTIVE NAV LINK ON SCROLL
-const spyIds=['home','skills','projects','cv','contact'];
+// ---------- ACTIVE NAV LINK ----------
+const spyIds=['home','about','skills','projects','cv','contact'];
 function updateActiveLink(){
     let current='home';
-    spyIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.offsetTop-120<=window.scrollY)current=id;});
+    spyIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.offsetTop-140<=window.scrollY)current=id;});
     document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current));
 }
-window.addEventListener('scroll',updateActiveLink);updateActiveLink();
 
-// BACK TO TOP
-const backToTop=document.getElementById('backToTop');
-if(backToTop){
-    window.addEventListener('scroll',()=>backToTop.classList.toggle('show',window.scrollY>400));
-    backToTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+// ---------- SCROLL PROGRESS, NAV, BACK-TO-TOP ----------
+const progressBar=document.getElementById('scrollProgress'),nav=document.querySelector('.nav'),backToTop=document.getElementById('backToTop');
+window.addEventListener('scroll',()=>{
+    const s=document.documentElement;
+    progressBar.style.width=(s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%';
+    nav.style.padding=window.scrollY>100?'.7rem 5%':'1rem 5%';
+    nav.style.boxShadow=window.scrollY>100?'0 8px 30px rgba(29,27,46,.12)':'none';
+    backToTop.classList.toggle('show',window.scrollY>400);
+    updateActiveLink();
+});
+updateActiveLink();
+backToTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// ---------- 3D PROJECT CAROUSEL ----------
+const ring=document.getElementById('ring');
+if(ring){
+    const slides=[...ring.children],n=slides.length,step=360/n,dotsBox=document.getElementById('carDots'),carousel=document.getElementById('carousel');
+    let cur=0,R=0,timer=null,dragged=false,startX=0,down=false;
+    const frontIndex=()=>((cur%n)+n)%n;
+    slides.forEach((s,i)=>{
+        const d=document.createElement('button');d.className='car-dot';d.setAttribute('aria-label','Project '+(i+1));
+        d.addEventListener('click',()=>{go(i);restart();});dotsBox.appendChild(d);
+    });
+    const dots=[...dotsBox.children];
+    function update(){
+        ring.style.transform=`translateZ(${-R}px) rotateY(${-cur*step}deg)`;
+        const f=frontIndex();
+        slides.forEach((s,i)=>s.classList.toggle('front',i===f));
+        dots.forEach((d,i)=>d.classList.toggle('active',i===f));
+    }
+    function layout(){
+        const w=ring.offsetWidth;
+        R=Math.round((w/2)/Math.tan(Math.PI/n))+Math.max(110,w*.55);
+        slides.forEach((s,i)=>{s.style.transform=`rotateY(${i*step}deg) translateZ(${R}px)`;});
+        update();
+    }
+    function move(d){cur+=d;update();}
+    function go(i){let diff=((i-cur)%n+n)%n;if(diff>n/2)diff-=n;cur+=diff;update();}
+    function restart(){clearInterval(timer);if(!reduceMotion)timer=setInterval(()=>move(1),4500);}
+    document.getElementById('carPrev').addEventListener('click',()=>{move(-1);restart();});
+    document.getElementById('carNext').addEventListener('click',()=>{move(1);restart();});
+    slides.forEach((s,i)=>s.addEventListener('click',e=>{
+        if(dragged){e.preventDefault();return;}
+        if(i!==frontIndex()){e.preventDefault();go(i);restart();}
+    }));
+    carousel.addEventListener('pointerdown',e=>{down=true;startX=e.clientX;dragged=false;});
+    window.addEventListener('pointerup',e=>{
+        if(!down)return;down=false;
+        const dx=e.clientX-startX;
+        if(Math.abs(dx)>40){dragged=true;move(dx<0?1:-1);restart();setTimeout(()=>{dragged=false;},80);}
+    });
+    carousel.addEventListener('mouseenter',()=>clearInterval(timer));
+    carousel.addEventListener('mouseleave',restart);
+    window.addEventListener('resize',layout);
+    layout();restart();
 }
 
-// CV TABS
+// ---------- CV TABS ----------
 const cvTabs=document.querySelectorAll('.cv-tab'),cvPanels=document.querySelectorAll('.cv-panel');
 cvTabs.forEach(tab=>tab.addEventListener('click',()=>{
     cvTabs.forEach(t=>t.classList.remove('active'));
@@ -67,7 +158,7 @@ cvTabs.forEach(tab=>tab.addEventListener('click',()=>{
     document.getElementById(tab.dataset.tab).classList.add('active');
 }));
 
-// CV STATS COUNT-UP
+// ---------- CV STATS COUNT-UP ----------
 const statNums=document.querySelectorAll('.cv-stat-num');
 function setStatsFinal(){statNums.forEach(n=>n.textContent=n.dataset.count);}
 const statsBox=document.querySelector('.cv-stats');
@@ -76,8 +167,8 @@ if(statsBox){
         entries.forEach(ent=>{
             if(!ent.isIntersecting)return;
             statNums.forEach(n=>{
-                const target=parseInt(n.dataset.count),steps=20;let step=0;
-                const timer=setInterval(()=>{step++;n.textContent=Math.round(target*step/steps);if(step>=steps)clearInterval(timer);},60);
+                const target=parseInt(n.dataset.count),steps=20;let stp=0;
+                const timer=setInterval(()=>{stp++;n.textContent=Math.round(target*stp/steps);if(stp>=steps)clearInterval(timer);},60);
             });
             statsObserver.disconnect();
         });
@@ -85,14 +176,14 @@ if(statsBox){
     statsObserver.observe(statsBox);
 }
 
-// DOWNLOAD CV (PRINT / SAVE AS PDF)
+// ---------- DOWNLOAD CV (PRINT / SAVE AS PDF) ----------
 const originalTitle=document.title;
 window.addEventListener('beforeprint',()=>{document.title='Samip Sapkota Portfolio';setStatsFinal();});
 window.addEventListener('afterprint',()=>{document.title=originalTitle;});
 const downloadCV=document.getElementById('downloadCV');
 downloadCV&&downloadCV.addEventListener('click',()=>{showNotification('Choose "Save as PDF" in the print window 📄');setTimeout(()=>window.print(),600);});
 
-// CLICK TO COPY (EMAIL)
+// ---------- CLICK TO COPY (EMAIL) ----------
 document.querySelectorAll('[data-copy]').forEach(el=>el.addEventListener('click',()=>{
     const text=el.dataset.copy;
     if(navigator.clipboard&&navigator.clipboard.writeText){
@@ -100,76 +191,82 @@ document.querySelectorAll('[data-copy]').forEach(el=>el.addEventListener('click'
     }else{showNotification('Copy not supported in this browser','error');}
 }));
 
-// LIVE LOCAL TIME (KATHMANDU)
+// ---------- LIVE LOCAL TIME (KATHMANDU) ----------
 const localTimeEl=document.getElementById('localTime');
 if(localTimeEl){
-    function updateLocalTime(){
+    const updateLocalTime=()=>{
         try{localTimeEl.textContent=new Date().toLocaleTimeString('en-US',{timeZone:'Asia/Kathmandu',hour:'2-digit',minute:'2-digit',second:'2-digit'});}
         catch(err){localTimeEl.textContent='--:--:--';}
-    }
+    };
     updateLocalTime();setInterval(updateLocalTime,1000);
 }
 
-// CONTACT FORM (OPENS EMAIL APP WITH MESSAGE READY) + COUNTER
-if(contactForm)contactForm.addEventListener('submit',e=>{e.preventDefault();
-    const n=contactForm.querySelector('input[type="text"]').value.trim(),
-          em=contactForm.querySelector('input[type="email"]').value.trim(),
-          m=(contactForm.querySelector('textarea')?.value||'').trim();
-    if(!n||!em||!m)return showNotification('Please fill all fields!','error');
-    const subject=encodeURIComponent('Portfolio message from '+n);
-    const body=encodeURIComponent(m+'\n\nFrom: '+n+' ('+em+')');
-    showNotification('✨ Opening your email app to send the message ✨','success');
-    window.location.href='mailto:samipaaa63@gmail.com?subject='+subject+'&body='+body;
-    contactForm.reset();
-    document.getElementById('nameCounter')&&(document.getElementById('nameCounter').textContent='0/50');
-    document.getElementById('msgCounter')&&(document.getElementById('msgCounter').textContent='0/500');
+// ---------- TIME GREETING ----------
+function updateGreeting(){
+    const g=document.getElementById('timeGreeting');
+    if(!g)return;
+    const h=new Date().getHours();let t='';
+    if(h<12)t='🌅 Good Morning';else if(h<17)t='☀️ Good Afternoon';else if(h<20)t='🌤️ Good Evening';else t='🌙 Good Night';
+    g.textContent=t;
+}
+updateGreeting();setInterval(updateGreeting,3600000);
+
+// ---------- CONTACT FORM (DELIVERED TO YOUR EMAIL VIA FORMSUBMIT) ----------
+const RECEIVER_EMAIL='samipaaa63@gmail.com';
+['nameInput','messageInput'].forEach(id=>{
+    const el=document.getElementById(id),c=document.getElementById(id==='nameInput'?'nameCounter':'msgCounter'),max=id==='nameInput'?50:500;
+    el&&c&&el.addEventListener('input',()=>{c.textContent=`${el.value.length}/${max}`;c.style.color=el.value.length>=max?'#ff6b57':'';});
 });
 
-['nameInput','messageInput'].forEach(id=>{const el=document.getElementById(id),c=document.getElementById(id==='nameInput'?'nameCounter':'msgCounter');el&&c&&el.addEventListener('input',()=>{c.textContent=`${el.value.length}/${id==='nameInput'?50:500}`;c.style.color=el.value.length>=(id==='nameInput'?50:500)?'#ff00ff':'rgba(255,255,255,.5)';});});
+if(contactForm){
+    const sendBtn=document.getElementById('sendBtn');
+    contactForm.addEventListener('submit',async e=>{
+        e.preventDefault();
+        const name=document.getElementById('nameInput').value.trim(),
+              email=document.getElementById('emailInput').value.trim(),
+              message=document.getElementById('messageInput').value.trim(),
+              honey=document.getElementById('honeyInput').value;
+        if(!name||!email||!message)return showNotification('Please fill all fields!','error');
+        if(honey)return; // bots fill the hidden field
 
-// NOTIFICATION
-function showNotification(msg,type='info'){
-    document.querySelector('.notification')?.remove();
-    const n=document.createElement('div');n.className='notification';n.textContent=msg;
-    if(type==='success')n.style.cssText='background:rgba(0,255,157,.1);border:1px solid var(--neon-green);box-shadow:0 0 20px var(--neon-green);';
-    else if(type==='error')n.style.cssText='background:rgba(255,85,85,.1);border:1px solid #ff5555;box-shadow:0 0 20px #ff5555;';
-    document.body.appendChild(n);setTimeout(()=>{n.style.opacity='1';n.style.transform='translateY(0)';},10);setTimeout(()=>{n.style.opacity='0';n.style.transform='translateY(-20px)';setTimeout(()=>n.remove(),300);},3000);
-}
-
-// IMAGE FALLBACK
-profilePhoto&&(profilePhoto.onerror=()=>{profilePhoto.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop';showNotification('Profile image not found. Using placeholder.','error');});
-
-// HOVER EFFECTS
-document.querySelectorAll('.project-card').forEach(c=>{c.addEventListener('mouseenter',()=>c.style.transform='translateY(-15px) scale(1.02)');c.addEventListener('mouseleave',()=>c.style.transform='translateY(-10px) scale(1)');});
-document.querySelectorAll('.skill-item').forEach(s=>{s.addEventListener('mouseenter',()=>s.style.transform='translateY(-10px) rotate(3deg)');s.addEventListener('mouseleave',()=>s.style.transform='translateY(-5px) rotate(0)');});
-document.querySelectorAll('.btn').forEach(b=>b.addEventListener('click',()=>{b.style.transform='scale(0.95)';setTimeout(()=>b.style.transform='',200);}))
-
-// NAV SCROLL
-const nav=document.querySelector('.nav');window.addEventListener('scroll',()=>{if(window.scrollY>100){nav.style.padding='0.8rem 5%';nav.style.background='rgba(10,10,10,.98)';nav.style.boxShadow='0 5px 30px rgba(0,243,255,.15)';}else{nav.style.padding='1.2rem 5%';nav.style.background='rgba(10,10,10,.95)';nav.style.boxShadow='none';}})
-
-// CURSOR
-const cursor=document.createElement('div');cursor.className='cursor';document.body.appendChild(cursor);
-document.addEventListener('mousemove',e=>{cursor.style.left=e.clientX-10+'px';cursor.style.top=e.clientY-10+'px';});
-document.querySelectorAll('a,button,.btn,.project-card,.skill-item,.contact-item').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('active'));el.addEventListener('mouseleave',()=>cursor.classList.remove('active'));});
-
-// NEON CURSOR TRAIL
-if(!reduceMotion){
-    let lastTrail=0,trailFlip=false;
-    document.addEventListener('mousemove',e=>{
-        const now=Date.now();if(now-lastTrail<40)return;lastTrail=now;
-        const d=document.createElement('div');d.className='trail-dot';
-        trailFlip=!trailFlip;
-        const color=trailFlip?'#00f3ff':'#ff00ff';
-        d.style.cssText=`left:${e.clientX-4}px;top:${e.clientY-4}px;background:${color};box-shadow:0 0 10px ${color}`;
-        document.body.appendChild(d);setTimeout(()=>d.remove(),700);
+        const label=sendBtn.textContent;
+        sendBtn.disabled=true;sendBtn.textContent='SENDING...';
+        try{
+            const res=await fetch('https://formsubmit.co/ajax/'+RECEIVER_EMAIL,{
+                method:'POST',
+                headers:{'Content-Type':'application/json','Accept':'application/json'},
+                body:JSON.stringify({name,email,message,_subject:'New portfolio message from '+name,_template:'table',_captcha:'false'})
+            });
+            const data=await res.json().catch(()=>({}));
+            if(res.ok&&(data.success===true||data.success==='true')){
+                showNotification('✨ Message sent! I will reply soon. ✨','success');
+                contactForm.reset();
+                document.getElementById('nameCounter').textContent='0/50';
+                document.getElementById('msgCounter').textContent='0/500';
+            }else{
+                console.warn('FormSubmit response:',data);
+                throw new Error('Not delivered');
+            }
+        }catch(err){
+            showNotification('Could not send directly. Opening your email app instead...','error');
+            const subject=encodeURIComponent('Portfolio message from '+name);
+            const body=encodeURIComponent(message+'\n\nFrom: '+name+' ('+email+')');
+            setTimeout(()=>{window.location.href='mailto:'+RECEIVER_EMAIL+'?subject='+subject+'&body='+body;},1200);
+        }finally{
+            sendBtn.disabled=false;sendBtn.textContent=label;
+        }
     });
 }
 
-// CONFETTI ON PHOTO CLICK
-photoBox&&photoBox.addEventListener('click',e=>{
+// ---------- IMAGE FALLBACK ----------
+profilePhoto&&(profilePhoto.onerror=()=>{profilePhoto.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=500&fit=crop';showNotification('Profile image not found. Using placeholder.','error');});
+
+// ---------- CONFETTI ON PHOTO CLICK ----------
+const photoFrame=document.querySelector('.photo-frame');
+photoFrame&&photoFrame.addEventListener('click',e=>{
     showNotification('🎉 Thanks for visiting!','success');
     if(reduceMotion)return;
-    const colors=['#00f3ff','#ff00ff','#00ff9d','#ffd700','#ffffff'];
+    const colors=['#5b5bd6','#ff6b57','#27b996','#ffc24b','#e0559f'];
     for(let i=0;i<40;i++){
         const c=document.createElement('div');c.className='confetti-piece';
         c.style.left=e.clientX+'px';c.style.top=e.clientY+'px';c.style.background=colors[i%colors.length];
@@ -184,52 +281,76 @@ photoBox&&photoBox.addEventListener('click',e=>{
     }
 });
 
-// SCROLL PROGRESS
-const progressBar=document.createElement('div');progressBar.className='scroll-progress';document.body.appendChild(progressBar);
-window.addEventListener('scroll',()=>{const s=document.documentElement;progressBar.style.width=(s.scrollTop/(s.scrollHeight-s.clientHeight)*100)+'%';});
-
-// PARTICLES BACKGROUND
-const canvas=document.getElementById('particlesCanvas');if(canvas){const ctx=canvas.getContext('2d');let p=[];function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}resize();window.addEventListener('resize',resize);for(let i=0;i<80;i++){p.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,radius:Math.random()*2+1,dx:(Math.random()-.5)*.5,dy:(Math.random()-.5)*.5,color:`hsl(${Math.random()*60+180},100%,60%)`});}function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);p.forEach(pt=>{pt.x+=pt.dx;pt.y+=pt.dy;if(pt.x<0||pt.x>canvas.width)pt.dx*=-1;if(pt.y<0||pt.y>canvas.height)pt.dy*=-1;ctx.beginPath();ctx.arc(pt.x,pt.y,pt.radius,0,2*Math.PI);ctx.fillStyle=pt.color;ctx.fill();});requestAnimationFrame(animate);}animate();}
-
-// 3D TILT
-photoBox&&(photoBox.addEventListener('mousemove',e=>{const r=photoBox.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,cX=r.width/2,cY=r.height/2;photoBox.style.transform=`perspective(1000px) rotateX(${(y-cY)/10}deg) rotateY(${(cX-x)/10}deg)`;}),photoBox.addEventListener('mouseleave',()=>{photoBox.style.transform='perspective(1000px) rotateX(0deg) rotateY(0deg)';}));
-
-// THEME TOGGLE (REMEMBERS YOUR CHOICE)
-const themeToggle=document.getElementById('themeToggle');let darkMode=true;
-function applyTheme(){document.body.classList.toggle('light',!darkMode);themeToggle&&(themeToggle.textContent=darkMode?'🌙':'☀️');}
-try{if(localStorage.getItem('theme')==='light'){darkMode=false;applyTheme();}}catch(err){}
-themeToggle&&themeToggle.addEventListener('click',()=>{
-    darkMode=!darkMode;applyTheme();
-    try{localStorage.setItem('theme',darkMode?'dark':'light');}catch(err){}
-    showNotification(`${darkMode?'Dark':'Light'} mode activated!`);
+// ---------- THEME TOGGLE (REMEMBERS YOUR CHOICE) ----------
+const themeToggle=document.getElementById('themeToggle');
+function syncThemeIcon(){
+    const dark=document.documentElement.classList.contains('dark');
+    themeToggle.innerHTML=dark?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content',dark?'#12131b':'#f3eee7');
+}
+syncThemeIcon();
+themeToggle.addEventListener('click',()=>{
+    const dark=document.documentElement.classList.toggle('dark');
+    try{localStorage.setItem('theme',dark?'dark':'light');}catch(err){}
+    syncThemeIcon();
+    showNotification(dark?'Dark mode activated!':'Light mode activated!');
 });
 
-// TIME GREETING
-function updateGreeting(){const g=document.getElementById('timeGreeting');if(g){const h=new Date().getHours();let t='';if(h<12)t='🌅 Good Morning';else if(h<17)t='☀️ Good Afternoon';else if(h<20)t='🌤️ Good Evening';else t='🌙 Good Night';g.innerHTML=`${t} 👋`;}}updateGreeting();setInterval(updateGreeting,3600000);
+// ---------- LIVE GITHUB STATS ----------
+fetch('https://api.github.com/users/samip04')
+    .then(r=>r.ok?r.json():Promise.reject())
+    .then(d=>{
+        document.getElementById('ghRepos').textContent=d.public_repos;
+        document.getElementById('ghFollowers').textContent=d.followers;
+        document.getElementById('ghStats').hidden=false;
+    })
+    .catch(()=>{});
 
-// FLOATING EMOJI
-const floatingEmoji=document.getElementById('floatingEmoji');if(floatingEmoji){const emojis=['✨','⭐','🌟','💫','⚡','🔥','💜','💙'];let i=0;floatingEmoji.addEventListener('click',()=>{i=(i+1)%emojis.length;floatingEmoji.textContent=emojis[i];showNotification(`Magic ${emojis[i]} activated!`);});setInterval(()=>{floatingEmoji.style.transform='translateY(-10px) rotate(15deg)';setTimeout(()=>floatingEmoji.style.transform='translateY(0) rotate(0deg)',200);},3000);}
-
-// SHORTCUTS (IGNORED WHILE TYPING IN FORM FIELDS)
-document.addEventListener('keydown',e=>{
-    const tag=(e.target.tagName||'').toUpperCase();
-    if(tag==='INPUT'||tag==='TEXTAREA')return;
-    if(e.key>='1'&&e.key<='3'){const arr=['normal','neon','grayscale'],names=['NORMAL','NEON','GRAY'],k=parseInt(e.key)-1;applyPhotoEffect(arr[k]);showNotification(`${names[k]} mode activated!`);}
-    if(e.code==='Space'){e.preventDefault();autoCycleEffects();}
-    if(e.code==='Escape')applyPhotoEffect('normal');
-    if(e.code==='KeyR'){applyPhotoEffect('normal');showNotification('Reset to normal mode!');}
-    if(e.code==='KeyC'){autoCycleEffects();showNotification('Manual cycle triggered!');}
+// ---------- COMMAND PALETTE (Ctrl+K) ----------
+const palette=document.getElementById('palette'),pInput=document.getElementById('paletteInput'),pList=document.getElementById('paletteList'),paletteBtn=document.getElementById('paletteBtn');
+const goTo=id=>()=>{const t=document.getElementById(id);t&&window.scrollTo({top:t.offsetTop-80,behavior:'smooth'});};
+const commands=[
+    {label:'Go to Home',icon:'fas fa-house',run:goTo('home')},
+    {label:'Go to About',icon:'fas fa-user',run:goTo('about')},
+    {label:'Go to Skills',icon:'fas fa-code',run:goTo('skills')},
+    {label:'Go to Projects',icon:'fas fa-folder-open',run:goTo('projects')},
+    {label:'Go to CV',icon:'fas fa-file-lines',run:goTo('cv')},
+    {label:'Go to Contact',icon:'fas fa-envelope',run:goTo('contact')},
+    {label:'Download CV (PDF)',icon:'fas fa-download',run:()=>downloadCV.click()},
+    {label:'Open Gesture Control Camera',icon:'fas fa-hand',run:()=>window.open('https://samip04.github.io/GestureCam-Pro-/','_blank')},
+    {label:'Open Weather App',icon:'fas fa-cloud-sun',run:()=>window.open('https://samip04.github.io/Weather-App/','_blank')},
+    {label:'Open GitHub',icon:'fab fa-github',run:()=>window.open('https://github.com/samip04','_blank')},
+    {label:'Copy my email',icon:'fas fa-copy',run:()=>document.querySelector('[data-copy]').click()},
+    {label:'Toggle dark / light theme',icon:'fas fa-circle-half-stroke',run:()=>themeToggle.click()}
+];
+let sel=0,shown=commands;
+function renderPalette(){
+    const q=pInput.value.trim().toLowerCase();
+    shown=commands.filter(c=>c.label.toLowerCase().includes(q));
+    if(sel>=shown.length)sel=0;
+    pList.innerHTML=shown.length?shown.map((c,i)=>`<li data-i="${i}" class="${i===sel?'sel':''}"><i class="${c.icon}"></i>${c.label}</li>`).join(''):'<li>No results</li>';
+}
+function openPalette(){palette.hidden=false;pInput.value='';sel=0;renderPalette();pInput.focus();}
+function closePalette(){palette.hidden=true;}
+function runCommand(i){const c=shown[i];if(!c)return;closePalette();setTimeout(c.run,50);}
+pInput.addEventListener('input',()=>{sel=0;renderPalette();});
+pList.addEventListener('click',e=>{const li=e.target.closest('li[data-i]');li&&runCommand(+li.dataset.i);});
+palette.addEventListener('click',e=>{if(e.target===palette)closePalette();});
+pInput.addEventListener('keydown',e=>{
+    const n=Math.max(shown.length,1);
+    if(e.key==='ArrowDown'){e.preventDefault();sel=(sel+1)%n;renderPalette();}
+    else if(e.key==='ArrowUp'){e.preventDefault();sel=(sel-1+n)%n;renderPalette();}
+    else if(e.key==='Enter'){e.preventDefault();runCommand(sel);}
+    else if(e.key==='Escape')closePalette();
 });
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();palette.hidden?openPalette():closePalette();}});
+paletteBtn.addEventListener('click',openPalette);
 
-// FOOTER YEAR
+// ---------- FOOTER YEAR ----------
 const yearEl=document.getElementById('year');yearEl&&(yearEl.textContent=new Date().getFullYear());
 
-// NOTIFICATION STYLE
-const notificationStyle=document.createElement('style');notificationStyle.textContent=`.notification{position:fixed;top:20px;right:20px;padding:1rem 2rem;background:rgba(0,243,255,.1);border:1px solid var(--neon-blue);border-radius:10px;color:var(--light);backdrop-filter:blur(10px);transform:translateY(-20px);opacity:0;transition:all .3s ease;z-index:20001;font-weight:500;box-shadow:var(--glow-blue)}`;document.head.appendChild(notificationStyle);
-
-// INIT
+// ---------- INIT ----------
 window.addEventListener('load',()=>{
-    applyPhotoEffect('normal');
     const pre=document.getElementById('preloader');
     pre&&setTimeout(()=>{pre.classList.add('hide');setTimeout(()=>pre.remove(),600);},900);
     setTimeout(()=>showNotification('✨ Welcome to my portfolio! ✨','success'),1600);
