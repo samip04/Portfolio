@@ -4,10 +4,6 @@
 
 
 
-
-
-
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NBGSM7V7DH"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -16,6 +12,11 @@
 
   gtag('config', 'G-NBGSM7V7DH');
 </script>
+
+
+
+
+
 
 *{margin:0;padding:0;box-sizing:border-box}
 
@@ -558,3 +559,205 @@ footer{text-align:center;padding:2.2rem;color:var(--muted);border-top:1px solid 
     .back-to-top{right:15px;bottom:15px}
     .preloader-logo{font-size:1.9rem}
 }
+
+
+
+/* =====================================================
+   NEW FEATURES
+   ===================================================== */
+
+/* ---------- Fonts: Nepali (Devanagari) support ---------- */
+body{font-family:'Outfit','Noto Sans Devanagari',sans-serif}
+html.ne .hero-hello,html.ne .preloader-logo,html.ne .palette-hint{letter-spacing:0;text-transform:none}
+html.ne .hero h1{line-height:1.3;font-size:clamp(2.6rem,5.6vw,4.4rem)}
+html.ne .hero h2{line-height:1.4}
+html.ne .section-title{line-height:1.45}
+html.ne .btn,html.ne .cv-tab,html.ne .cv-download{letter-spacing:0}
+html.ne .p-card h3,html.ne .cv-card h3,html.ne .sv-card h3{line-height:1.4}
+
+/* ---------- Accent color themes ---------- */
+html[data-accent="coral"]{--indigo:#ff6b57;--indigo-d:#d9442f;--extrude:#ffb3a8}
+html.dark[data-accent="coral"]{--extrude:#d9442f}
+html[data-accent="mint"]{--indigo:#1c9c7c;--indigo-d:#157a63;--extrude:#8fe0cb}
+html.dark[data-accent="mint"]{--extrude:#157a63}
+html[data-accent="pink"]{--indigo:#d6458f;--indigo-d:#a82f6c;--extrude:#f1a6cc}
+html.dark[data-accent="pink"]{--extrude:#a82f6c}
+
+.btn-primary{box-shadow:0 6px 0 var(--indigo-d),0 16px 26px color-mix(in srgb,var(--indigo) 35%,transparent)}
+.btn-primary:hover{box-shadow:0 8px 0 var(--indigo-d),0 20px 30px color-mix(in srgb,var(--indigo) 40%,transparent)}
+.btn-primary:active{box-shadow:0 1px 0 var(--indigo-d),0 4px 8px color-mix(in srgb,var(--indigo) 30%,transparent)}
+.form-input:focus{box-shadow:inset 0 3px 8px rgba(29,27,46,.06),0 0 0 4px color-mix(in srgb,var(--indigo) 22%,transparent)}
+
+/* ---------- Accessibility ---------- */
+.skip-link{position:fixed;left:12px;top:-70px;z-index:30001;background:var(--indigo);color:#fff;padding:.6rem 1rem;border-radius:10px;font-weight:700;text-decoration:none;transition:top .2s}
+.skip-link:focus{top:12px}
+:focus-visible{outline:3px solid var(--indigo);outline-offset:3px}
+.form-input:focus-visible{outline:none}
+
+/* ---------- Nav: language button + wider menu breakpoint ---------- */
+.nav-actions{display:flex;align-items:center;gap:.7rem}
+.nav-links a{white-space:nowrap}
+
+.lang-toggle{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--text);font-family:inherit;font-weight:700;font-size:.9rem;cursor:pointer;box-shadow:0 4px 0 var(--line-strong);transition:all .15s}
+.lang-toggle i{color:var(--indigo)}
+.lang-toggle:hover{transform:translateY(-2px)}
+.lang-toggle:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line-strong)}
+
+@media (max-width:1100px){
+    .nav-links{gap:.2rem}
+    .nav-links a{padding:.5rem .8rem}
+}
+@media (max-width:900px){
+    .menu-toggle{display:block}
+    .nav-links{display:none;position:absolute;top:100%;left:0;width:100%;flex-direction:column;gap:.4rem;padding:1rem 5%;background:var(--nav-bg);border-bottom:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+    .nav-links.open{display:flex}
+}
+
+/* ---------- Glow cursor ---------- */
+.cursor-glow{position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:2px solid var(--indigo);background:color-mix(in srgb,var(--indigo) 12%,transparent);pointer-events:none;z-index:30000;opacity:0;transition:opacity .3s,width .2s,height .2s,margin .2s,background .2s}
+.cursor-glow.show{opacity:.85}
+.cursor-glow.big{width:58px;height:58px;margin:-29px 0 0 -29px;background:color-mix(in srgb,var(--indigo) 22%,transparent)}
+@media (hover:none){.cursor-glow{display:none}}
+
+/* ---------- Skill level bars ---------- */
+.bar{height:8px;border-radius:8px;background:var(--line-strong);margin-top:1rem;overflow:hidden;transform:translateZ(18px)}
+.bar span{display:block;height:100%;width:0;border-radius:8px;background:var(--c,var(--indigo));transition:width 1.2s cubic-bezier(.2,.8,.2,1) .3s}
+.reveal.in .bar span{width:var(--w)}
+
+/* ---------- Right now strip ---------- */
+.now-title{text-align:center;margin:3rem 0 1.2rem;font-size:1.1rem;font-weight:800;letter-spacing:3px;color:var(--coral)}
+html.ne .now-title{letter-spacing:0}
+.now-strip{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem}
+.now-item{padding:1.1rem 1.3rem;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.now-item small{display:block;color:var(--indigo);font-weight:800;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:.2rem}
+html.ne .now-item small{letter-spacing:0;text-transform:none}
+.now-item b{font-weight:700}
+
+/* ---------- Project cards: tags + buttons (roomier ring) ---------- */
+.carousel{height:450px}
+.ring{height:370px;margin-top:-185px}
+.p-card{padding:1.6rem}
+.p-icon{margin-bottom:1rem}
+.p-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.p-tags span{font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:8px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.p-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.6rem}
+.p-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .9rem;border-radius:10px;font-weight:700;font-size:.85rem;text-decoration:none;color:#fff;background:var(--indigo);box-shadow:0 3px 0 var(--indigo-d);transition:transform .15s}
+.p-btn:hover{transform:translateY(-2px)}
+.p-btn-alt{background:var(--surface);color:var(--text);border:1px solid var(--line);box-shadow:0 3px 0 var(--line-strong)}
+@media (max-width:576px){.carousel{height:430px}}
+
+/* ---------- Services ---------- */
+.services-grid{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.6rem}
+.sv-card{display:flex;flex-direction:column;align-items:flex-start;padding:1.8rem;background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.sv-icon{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;font-size:1.6rem;color:#fff;background:var(--c,var(--indigo));box-shadow:0 6px 0 rgba(0,0,0,.18);margin-bottom:1.1rem;transform:translateZ(30px)}
+.sv-card h3{font-size:1.2rem;font-weight:800;margin-bottom:.5rem}
+.sv-card p{color:var(--muted);flex:1}
+.sv-btn{margin-top:1.2rem;padding:.65rem 1.5rem;font-size:.95rem}
+
+/* ---------- CV buttons ---------- */
+.cv-print-btn{padding:.7rem 1.2rem;border-radius:14px;font-family:inherit;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .15s;border:1px solid var(--line);background:var(--surface);color:var(--text);box-shadow:0 5px 0 var(--line-strong)}
+.cv-print-btn:hover{transform:translateY(-2px)}
+.cv-print-btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--line-strong)}
+.cv-print-btn i{margin-right:.4rem}
+
+/* ---------- CV timeline (screen only) ---------- */
+@media screen{
+    #cvEducation,#cvExperience{position:relative;padding-left:2.2rem}
+    #cvEducation::before,#cvExperience::before{content:'';position:absolute;left:9px;top:14px;bottom:14px;width:3px;border-radius:3px;background:linear-gradient(var(--indigo),var(--coral),var(--sun))}
+    #cvEducation .cv-card::before,#cvExperience .cv-card::before{content:'';position:absolute;left:-2.2rem;top:2rem;width:21px;height:21px;border-radius:50%;background:var(--bg);border:4px solid var(--indigo);box-shadow:0 0 0 4px var(--bg)}
+}
+
+/* ---------- Testimonials ---------- */
+section[hidden]{display:none}
+.testi{max-width:700px;margin:0 auto;padding:2.2rem;background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+.testi-q{font-size:1.15rem;line-height:1.8;color:var(--muted);font-style:italic;margin-bottom:1.2rem}
+.testi-q::before{content:'“';display:block;font-size:3rem;line-height:.6;color:var(--indigo);font-style:normal}
+.testi-by b{display:block}
+.testi-by span{color:var(--muted);font-size:.9rem}
+
+/* ---------- FAQ ---------- */
+.faq-wrap{max-width:800px;margin:0 auto}
+.faq-item{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden}
+.faq-item summary{cursor:pointer;padding:1.1rem 1.4rem;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:'+';color:var(--indigo);font-size:1.5rem;line-height:1;flex-shrink:0}
+.faq-item[open] summary::after{content:'–'}
+.faq-a{padding:0 1.4rem 1.2rem;color:var(--muted)}
+
+/* ---------- Contact form: select + buttons ---------- */
+select.form-input{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:2.6rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a3a0b9' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1.1rem center}
+select.form-input option{background:var(--surface);color:var(--text)}
+.contact-form .btn{width:100%;text-align:center}
+.save-contact{width:100%;text-align:center}
+.save-contact i{margin-right:.5rem}
+
+/* ---------- Floating accent picker ---------- */
+.accent-btn{position:fixed;bottom:20px;left:140px;width:50px;height:50px;border-radius:15px;border:1px solid var(--line);background:var(--surface);color:var(--indigo);font-size:1.1rem;cursor:pointer;z-index:10000;box-shadow:0 5px 0 var(--line-strong),0 12px 20px rgba(29,27,46,.12);transition:all .15s}
+.accent-btn:hover{transform:translateY(-3px)}
+.accent-btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--line-strong)}
+.accent-pop{position:fixed;bottom:84px;left:140px;display:flex;gap:.6rem;padding:.7rem;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);z-index:10001}
+.accent-pop[hidden]{display:none}
+.swatch{width:30px;height:30px;border-radius:50%;border:3px solid var(--surface);background:var(--sw);cursor:pointer;box-shadow:0 0 0 2px var(--line-strong);transition:transform .15s}
+.swatch:hover{transform:scale(1.15)}
+.swatch.active{box-shadow:0 0 0 3px var(--text)}
+
+/* ---------- Terminal ---------- */
+.term{position:fixed;inset:0;background:rgba(10,10,18,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:20004;display:flex;align-items:center;justify-content:center;padding:1rem}
+.term[hidden]{display:none}
+.term-box{width:min(700px,100%);background:#0d0e14;border:1px solid rgba(255,255,255,.12);border-radius:16px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace,'Noto Sans Devanagari';font-size:.92rem;color:#cfe9cf}
+.term-bar{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:#171923;color:#9aa0b8;font-size:.82rem}
+.term-bar .dots{display:flex;gap:6px}
+.term-bar .dots i{display:block;width:11px;height:11px;border-radius:50%;background:#ff5f56}
+.term-bar .dots i:nth-child(2){background:#ffbd2e}
+.term-bar .dots i:nth-child(3){background:#27c93f}
+.term-bar b{flex:1;font-weight:600}
+.term-bar button{background:none;border:none;color:#9aa0b8;cursor:pointer;font-size:1rem}
+.term-out{height:min(52vh,380px);overflow-y:auto;padding:1rem;white-space:pre-wrap;word-break:break-word}
+.term-out .tl{margin-bottom:.35rem;line-height:1.55}
+.term-out .cmd{color:#8aa4ff}
+.term-out .ok{color:#6ee7a8}
+.term-out .err{color:#ff8a7a}
+.term-in{display:flex;gap:.6rem;padding:.8rem 1rem;border-top:1px solid rgba(255,255,255,.08)}
+.term-in span{color:#6ee7a8}
+.term-in input{flex:1;background:transparent;border:none;outline:none;color:#fff;font:inherit}
+.term-link{margin-top:.8rem;background:none;border:1px dashed var(--line-strong);color:var(--muted);font:inherit;font-size:.85rem;padding:.35rem .9rem;border-radius:10px;cursor:pointer;transition:all .2s}
+.term-link:hover{color:var(--indigo);border-color:var(--indigo)}
+
+/* ---------- Hidden holder + design of the downloadable PDF CV ---------- */
+#cvDocWrap{position:fixed;left:-10000px;top:0;pointer-events:none}
+
+.cvdoc{width:794px;min-height:1120px;background:#fff;color:#1d1b2e;font-family:'Outfit','Noto Sans Devanagari',sans-serif;font-size:14px;line-height:1.55;position:relative}
+.cvd-head{background:#1d1b2e;color:#fff;padding:34px 44px;display:flex;justify-content:space-between;align-items:center;gap:24px;border-bottom:5px solid #5b5bd6}
+.cvd-head h1{font-size:34px;font-weight:800;line-height:1.25;color:#fff;margin:0}
+.cvd-head h2{font-size:16px;font-weight:500;color:#b9b9ff;margin:4px 0 14px}
+.cvd-contact{display:flex;flex-direction:column;gap:3px;font-size:12.5px;color:#e8e8e8}
+.cvd-photo{width:112px;height:136px;object-fit:cover;border-radius:14px;border:3px solid #5b5bd6;flex-shrink:0}
+.cvd-body{padding:22px 44px 10px}
+.cvd-body h3{font-size:15px;font-weight:700;color:#3b3ba8;border-left:4px solid #5b5bd6;border-bottom:1px solid #ddd;padding:0 0 3px 10px;margin:20px 0 10px;line-height:1.4}
+.cvd-body h3:first-child{margin-top:0}
+.cvd-about{color:#444;font-size:13.5px}
+.cvd-item{margin:0 0 10px;padding-left:14px;border-left:2px solid #ddd}
+.cvd-item b{display:block;font-size:14.5px;color:#111;font-weight:700}
+.cvd-item span{display:block;color:#333;font-size:13.5px}
+.cvd-item em{display:block;font-style:normal;color:#666;font-size:12.5px}
+.cvd-tags{display:flex;flex-wrap:wrap;gap:8px}
+.cvd-tags span{padding:4px 14px;border:1px solid #5b5bd6;border-radius:20px;background:#f1f1ff;color:#2b2b7a;font-weight:600;font-size:13px}
+.cvd-foot{position:absolute;left:44px;right:44px;bottom:22px;text-align:center;font-size:11px;letter-spacing:1px;color:#777;border-top:1px solid #ddd;padding-top:8px}
+
+
+
+/* =====================================================
+   COMPATIBILITY (older phones, in-app browsers)
+   ===================================================== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,summary,select{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+
+/* Fallback for the "inset" shorthand on older browsers */
+body::before,.preloader,.bg-blobs,.palette,.term,.photo-card,.photo-card::before,.photo-frame,.slide,.face,[data-tilt]::after{top:0;right:0;bottom:0;left:0}
+
+.palette,.term{-webkit-backdrop-filter:blur(6px)}
+
+/* If JavaScript fails to run, never leave the page blank */
+html.nojs-fallback .reveal{opacity:1!important;transform:none!important}
+html.nojs-fallback .bar span{width:var(--w)!important}
+html.nojs-fallback .preloader{display:none!important}
