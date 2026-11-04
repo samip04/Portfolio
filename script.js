@@ -1,6 +1,3 @@
-
-
-
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NBGSM7V7DH"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -12,11 +9,6 @@
 
 
 
-
-
-
-
-window.__ok=true;
 
 // =====================================================
 //  TRANSLATIONS (English / Nepali)
@@ -87,7 +79,6 @@ t_pdf_making:"Creating your PDF... 📄",t_pdf_ok:"CV downloaded! ✅",t_pdf_fai
 t_print:'Choose "Save as PDF" in the print window 📄',
 t_vcard:"Contact file downloaded 📇",t_link_copied:"Website link copied!",t_lang:"Language: English",
 t_konami:"🎮 Konami code unlocked!",
-t_inapp:"Downloads are blocked inside Instagram. Tap ⋯ and choose “Open in browser”.",
 t_img_missing:"Profile image not found. Using placeholder."
 },
 ne:{
@@ -155,7 +146,6 @@ t_pdf_making:"तपाईंको PDF तयार हुँदैछ... 📄"
 t_print:'प्रिन्ट विन्डोमा "Save as PDF" छान्नुहोस् 📄',
 t_vcard:"सम्पर्क फाइल डाउनलोड भयो 📇",t_link_copied:"वेबसाइट लिङ्क कपी भयो!",t_lang:"भाषा: नेपाली",
 t_konami:"🎮 कोनामी कोड खुल्यो!",
-t_inapp:"Instagram भित्र डाउनलोड रोकिन्छ। ⋯ थिचेर “Open in browser” छान्नुहोस्।",
 t_img_missing:"प्रोफाइल फोटो भेटिएन। प्लेसहोल्डर प्रयोग गरियो।"
 }
 };
@@ -166,9 +156,6 @@ try{
     lang=(saved==='ne'||saved==='en')?saved:((navigator.language||'').toLowerCase().indexOf('ne')===0?'ne':'en');
 }catch(e){}
 const t=k=>(I18N[lang]&&I18N[lang][k]!==undefined)?I18N[lang][k]:I18N.en[k];
-
-// Instagram / Facebook in-app browsers block file downloads
-const IN_APP=/Instagram|FBAN|FBAV|FB_IAB/i.test(navigator.userAgent||'');
 
 // =====================================================
 //  BASICS
@@ -181,21 +168,17 @@ const profilePhoto=document.getElementById('profilePhoto'),
       canHover=window.matchMedia&&window.matchMedia('(hover: hover)').matches;
 
 // ---------- TOAST NOTIFICATION ----------
-function showNotification(msg,type='info',ms=3200){
-    const old=document.querySelector('.toast');
-    if(old&&old.parentNode)old.parentNode.removeChild(old);
+function showNotification(msg,type='info'){
+    document.querySelector('.toast')?.remove();
     const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;
     document.body.appendChild(el);
     setTimeout(()=>{el.style.opacity='1';el.style.transform='translate(-50%,0)';},10);
-    setTimeout(()=>{
-        el.style.opacity='0';el.style.transform='translate(-50%,20px)';
-        setTimeout(()=>{if(el.parentNode)el.parentNode.removeChild(el);},300);
-    },ms);
+    setTimeout(()=>{el.style.opacity='0';el.style.transform='translate(-50%,20px)';setTimeout(()=>el.remove(),300);},3200);
 }
 
 // ---------- CONFETTI ----------
 function burst(x,y,count=40){
-    if(reduceMotion||typeof document.body.animate!=='function')return;
+    if(reduceMotion)return;
     const colors=['#5b5bd6','#ff6b57','#27b996','#ffc24b','#e0559f'];
     for(let i=0;i<count;i++){
         const c=document.createElement('div');c.className='confetti-piece';
@@ -207,7 +190,7 @@ function burst(x,y,count=40){
             {transform:`translate(${dx}px,${dy}px) rotate(${rot/2}deg)`,opacity:1,offset:.5},
             {transform:`translate(${dx*1.2}px,${dy+450}px) rotate(${rot}deg)`,opacity:0}
         ],{duration:1400+Math.random()*600,easing:'ease-out'});
-        anim.onfinish=()=>{if(c.parentNode)c.parentNode.removeChild(c);};
+        anim.onfinish=()=>c.remove();
     }
 }
 
@@ -297,15 +280,11 @@ if(roleEl){
     },3500);
 }
 
-// ---------- SCROLL REVEAL (with fallback for old browsers) ----------
-if('IntersectionObserver' in window){
-    const revealObserver=new IntersectionObserver(entries=>{
-        entries.forEach(ent=>{ent.isIntersecting&&ent.target.classList.add('in');});
-    },{threshold:.1,rootMargin:'0px 0px -50px 0px'});
-    document.querySelectorAll('.reveal').forEach(s=>revealObserver.observe(s));
-}else{
-    document.querySelectorAll('.reveal').forEach(s=>s.classList.add('in'));
-}
+// ---------- SCROLL REVEAL ----------
+const revealObserver=new IntersectionObserver(entries=>{
+    entries.forEach(ent=>{ent.isIntersecting&&ent.target.classList.add('in');});
+},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.reveal').forEach(s=>revealObserver.observe(s));
 
 // ---------- SMOOTH SCROLL ----------
 document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
@@ -374,22 +353,12 @@ if(ring){
         if(dragged){e.preventDefault();return;}
         if(i!==frontIndex()){e.preventDefault();go(i);restart();}
     }));
-    if(window.PointerEvent){
-        carousel.addEventListener('pointerdown',e=>{down=true;startX=e.clientX;dragged=false;});
-        window.addEventListener('pointerup',e=>{
-            if(!down)return;down=false;
-            const dx=e.clientX-startX;
-            if(Math.abs(dx)>40){dragged=true;move(dx<0?1:-1);restart();setTimeout(()=>{dragged=false;},80);}
-        });
-    }else{
-        // Older phones without pointer events: use touch swipe
-        carousel.addEventListener('touchstart',e=>{down=true;startX=e.touches[0].clientX;dragged=false;},{passive:true});
-        window.addEventListener('touchend',e=>{
-            if(!down)return;down=false;
-            const dx=e.changedTouches[0].clientX-startX;
-            if(Math.abs(dx)>40){dragged=true;move(dx<0?1:-1);restart();setTimeout(()=>{dragged=false;},80);}
-        });
-    }
+    carousel.addEventListener('pointerdown',e=>{down=true;startX=e.clientX;dragged=false;});
+    window.addEventListener('pointerup',e=>{
+        if(!down)return;down=false;
+        const dx=e.clientX-startX;
+        if(Math.abs(dx)>40){dragged=true;move(dx<0?1:-1);restart();setTimeout(()=>{dragged=false;},80);}
+    });
     carousel.addEventListener('mouseenter',()=>clearInterval(timer));
     carousel.addEventListener('mouseleave',restart);
     window.addEventListener('resize',layout);
@@ -410,19 +379,17 @@ const statNums=document.querySelectorAll('.cv-stat-num');
 function setStatsFinal(){statNums.forEach(n=>n.textContent=n.dataset.count);}
 const statsBox=document.querySelector('.cv-stats');
 if(statsBox){
-    if('IntersectionObserver' in window){
-        const statsObserver=new IntersectionObserver(entries=>{
-            entries.forEach(ent=>{
-                if(!ent.isIntersecting)return;
-                statNums.forEach(n=>{
-                    const target=parseInt(n.dataset.count),steps=20;let stp=0;
-                    const timer=setInterval(()=>{stp++;n.textContent=Math.round(target*stp/steps);if(stp>=steps)clearInterval(timer);},60);
-                });
-                statsObserver.disconnect();
+    const statsObserver=new IntersectionObserver(entries=>{
+        entries.forEach(ent=>{
+            if(!ent.isIntersecting)return;
+            statNums.forEach(n=>{
+                const target=parseInt(n.dataset.count),steps=20;let stp=0;
+                const timer=setInterval(()=>{stp++;n.textContent=Math.round(target*stp/steps);if(stp>=steps)clearInterval(timer);},60);
             });
-        },{threshold:.5});
-        statsObserver.observe(statsBox);
-    }else{setStatsFinal();}
+            statsObserver.disconnect();
+        });
+    },{threshold:.5});
+    statsObserver.observe(statsBox);
 }
 
 // =====================================================
@@ -432,7 +399,7 @@ function buildCvDoc(){
     const item=(a,b,c,d)=>`<div class="cvd-item"><b>${a}</b><span>${b}</span><em>${c}${d?' · '+d:''}</em></div>`;
     const skills=['HTML','CSS','JavaScript',t('sk_graphics'),'Figma','UI/UX'];
     const projects=[
-        [t('p1_t'),'samipsapkota.com.np'],
+        [t('p1_t'),'samip04.github.io/Portfolio'],
         [t('p2_t'),'samip04.github.io/GestureCam-Pro-'],
         [t('p3_t'),'samip04.github.io/Weather-App']
     ];
@@ -464,7 +431,7 @@ function buildCvDoc(){
             <h3>${t('tab_projects')}</h3>
             ${projects.map(p=>`<div class="cvd-item"><b>${p[0]}</b><em>${p[1]}</em></div>`).join('')}
         </div>
-        <div class="cvd-foot">Samip Sapkota Portfolio · samipsapkota.com.np</div>
+        <div class="cvd-foot">Samip Sapkota Portfolio · samip04.github.io/Portfolio</div>
     </div>`;
 }
 
@@ -472,13 +439,11 @@ window.addEventListener('beforeprint',()=>{document.title='Samip Sapkota Portfol
 window.addEventListener('afterprint',()=>{document.title=t('doc_title');});
 
 function printCV(){
-    if(IN_APP){showNotification(t('t_inapp'),'error',6000);return;}
     showNotification(t('t_print'));
     setTimeout(()=>window.print(),600);
 }
 
 async function downloadCVPdf(){
-    if(IN_APP){showNotification(t('t_inapp'),'error',6000);return;}
     if(typeof html2pdf==='undefined'){
         showNotification(t('t_pdf_fail'),'error');
         setTimeout(()=>window.print(),900);
@@ -511,13 +476,11 @@ async function downloadCVPdf(){
     }
 }
 const downloadCV=document.getElementById('downloadCV');
-if(downloadCV)downloadCV.addEventListener('click',downloadCVPdf);
-const printBtn=document.getElementById('printCV');
-if(printBtn)printBtn.addEventListener('click',printCV);
+downloadCV&&downloadCV.addEventListener('click',downloadCVPdf);
+document.getElementById('printCV')?.addEventListener('click',printCV);
 
 // ---------- SAVE CONTACT (vCard) ----------
 function saveContact(){
-    if(IN_APP){showNotification(t('t_inapp'),'error',6000);return;}
     const v=[
         'BEGIN:VCARD','VERSION:3.0',
         'N:Sapkota;Samip;;;','FN:Samip Sapkota',
@@ -525,19 +488,18 @@ function saveContact(){
         'TEL;TYPE=CELL:+9779763500428',
         'EMAIL:samipaaa63@gmail.com',
         'ADR;TYPE=HOME:;;Kathmandu;;;;Nepal',
-        'URL:https://samipsapkota.com.np/',
+        'URL:https://samip04.github.io/Portfolio/',
         'END:VCARD'
     ].join('\r\n');
     const blob=new Blob([v],{type:'text/vcard'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
     a.href=url;a.download='Samip_Sapkota.vcf';
-    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    document.body.appendChild(a);a.click();a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),1500);
     showNotification(t('t_vcard'),'success');
 }
-const saveBtn=document.getElementById('saveContact');
-if(saveBtn)saveBtn.addEventListener('click',saveContact);
+document.getElementById('saveContact')?.addEventListener('click',saveContact);
 
 // ---------- SHARE SITE ----------
 async function shareSite(){
@@ -592,15 +554,11 @@ document.querySelectorAll('[data-need]').forEach(b=>b.addEventListener('click',(
     const sel=document.getElementById('needInput');
     if(sel)sel.value=b.dataset.need;
     goTo('contact')();
-    setTimeout(()=>{
-        const nm=document.getElementById('nameInput');
-        if(nm)nm.focus({preventScroll:true});
-    },800);
+    setTimeout(()=>document.getElementById('nameInput')?.focus({preventScroll:true}),800);
 }));
 
 // Send through WhatsApp (no backend needed)
-const waBtn=document.getElementById('waSend');
-if(waBtn)waBtn.addEventListener('click',()=>{
+document.getElementById('waSend')?.addEventListener('click',()=>{
     const name=document.getElementById('nameInput').value.trim(),
           email=document.getElementById('emailInput').value.trim(),
           need=document.getElementById('needInput').value,
@@ -668,7 +626,7 @@ const KONAMI=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRigh
 let kPos=0;
 document.addEventListener('keydown',e=>{
     if(/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;
-    const k=e.key&&e.key.length===1?e.key.toLowerCase():e.key;
+    const k=e.key.length===1?e.key.toLowerCase():e.key;
     if(k===KONAMI[kPos]){
         kPos++;
         if(kPos===KONAMI.length){
@@ -684,8 +642,7 @@ const themeToggle=document.getElementById('themeToggle');
 function syncThemeIcon(){
     const dark=document.documentElement.classList.contains('dark');
     themeToggle.innerHTML=dark?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
-    const tc=document.querySelector('meta[name="theme-color"]');
-    if(tc)tc.setAttribute('content',dark?'#12131b':'#f3eee7');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content',dark?'#12131b':'#f3eee7');
 }
 syncThemeIcon();
 themeToggle.addEventListener('click',()=>{
@@ -699,7 +656,7 @@ themeToggle.addEventListener('click',()=>{
 const ACCENTS=['indigo','coral','mint','pink'];
 const accentBtn=document.getElementById('accentBtn'),accentPop=document.getElementById('accentPop');
 function setAccent(a,quiet){
-    if(ACCENTS.indexOf(a)<0)a='indigo';
+    if(!ACCENTS.includes(a))a='indigo';
     if(a==='indigo')document.documentElement.removeAttribute('data-accent');
     else document.documentElement.setAttribute('data-accent',a);
     try{localStorage.setItem('accent-v1',a);}catch(e){}
@@ -719,16 +676,14 @@ accentPop.addEventListener('click',e=>{
 document.addEventListener('click',e=>{if(!accentPop.hidden&&!accentPop.contains(e.target)&&e.target!==accentBtn)accentPop.hidden=true;});
 
 // ---------- LIVE GITHUB STATS ----------
-if(window.fetch){
-    fetch('https://api.github.com/users/samip04')
-        .then(r=>r.ok?r.json():Promise.reject())
-        .then(d=>{
-            document.getElementById('ghRepos').textContent=d.public_repos;
-            document.getElementById('ghFollowers').textContent=d.followers;
-            document.getElementById('ghStats').hidden=false;
-        })
-        .catch(()=>{});
-}
+fetch('https://api.github.com/users/samip04')
+    .then(r=>r.ok?r.json():Promise.reject())
+    .then(d=>{
+        document.getElementById('ghRepos').textContent=d.public_repos;
+        document.getElementById('ghFollowers').textContent=d.followers;
+        document.getElementById('ghStats').hidden=false;
+    })
+    .catch(()=>{});
 
 // =====================================================
 //  TERMINAL
@@ -749,7 +704,7 @@ const termCmds={
     help:()=>t('term_help').split('\n'),
     about:()=>[t('about_text')],
     skills:()=>['HTML · CSS · JavaScript · '+t('sk_graphics')+' · Figma · UI/UX'],
-    projects:()=>['1. '+t('p1_t')+'  → samipsapkota.com.np','2. '+t('p2_t')+'  → samip04.github.io/GestureCam-Pro-','3. '+t('p3_t')+'  → samip04.github.io/Weather-App'],
+    projects:()=>['1. '+t('p1_t')+'  → samip04.github.io/Portfolio','2. '+t('p2_t')+'  → samip04.github.io/GestureCam-Pro-','3. '+t('p3_t')+'  → samip04.github.io/Weather-App'],
     services:()=>['• '+t('sv1_t'),'• '+t('sv2_t'),'• '+t('sv3_t'),'• '+t('sv4_t')],
     contact:()=>['WhatsApp: +977 9763500428','Email: samipaaa63@gmail.com',t('fact_loc')],
     theme:()=>{themeToggle.click();return[];},
@@ -813,7 +768,7 @@ const commands=[
 let sel=0,shown=commands;
 function renderPalette(){
     const q=pInput.value.trim().toLowerCase();
-    shown=commands.filter(c=>t(c.k).toLowerCase().indexOf(q)>-1);
+    shown=commands.filter(c=>t(c.k).toLowerCase().includes(q));
     if(sel>=shown.length)sel=0;
     pList.innerHTML=shown.length?shown.map((c,i)=>`<li data-i="${i}" class="${i===sel?'sel':''}"><i class="${c.icon}"></i>${t(c.k)}</li>`).join(''):`<li>${t('pal_none')}</li>`;
 }
@@ -830,7 +785,7 @@ pInput.addEventListener('keydown',e=>{
     else if(e.key==='Enter'){e.preventDefault();runCommand(sel);}
     else if(e.key==='Escape')closePalette();
 });
-document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key&&e.key.toLowerCase()==='k'){e.preventDefault();palette.hidden?openPalette():closePalette();}});
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();palette.hidden?openPalette():closePalette();}});
 paletteBtn.addEventListener('click',openPalette);
 
 // =====================================================
@@ -846,8 +801,7 @@ function applyLang(first){
     document.querySelectorAll('[data-i18n-title]').forEach(el=>{el.title=t(el.dataset.i18nTitle);});
 
     document.title=t('doc_title');
-    const md=document.querySelector('meta[name="description"]');
-    if(md)md.setAttribute('content',t('meta_desc'));
+    document.querySelector('meta[name="description"]')?.setAttribute('content',t('meta_desc'));
 
     typeName(t('name'),first);
     if(roleEl)roleEl.textContent=t('roles')[roleIdx%t('roles').length];
@@ -856,7 +810,7 @@ function applyLang(first){
     updateLocalTime();
 
     const ft=document.getElementById('footerText');
-    if(ft)ft.textContent=t('footer').replace('%y',new Date().getFullYear());
+    ft&&(ft.textContent=t('footer').replace('%y',new Date().getFullYear()));
 
     renderPalette();
 }
@@ -876,6 +830,6 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
 // ---------- INIT ----------
 window.addEventListener('load',()=>{
     const pre=document.getElementById('preloader');
-    pre&&setTimeout(()=>{pre.classList.add('hide');setTimeout(()=>{if(pre.parentNode)pre.parentNode.removeChild(pre);},600);},900);
+    pre&&setTimeout(()=>{pre.classList.add('hide');setTimeout(()=>pre.remove(),600);},900);
     setTimeout(()=>showNotification(t('t_welcome'),'success'),1600);
 });
