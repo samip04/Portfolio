@@ -18,6 +18,8 @@
 
 
 
+
+
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
@@ -563,7 +565,7 @@ footer{text-align:center;padding:2.2rem;color:var(--muted);border-top:1px solid 
 
 
 /* =====================================================
-   NEW FEATURES
+   NEW FEATURES (everything below is new)
    ===================================================== */
 
 /* ---------- Fonts: Nepali (Devanagari) support ---------- */
@@ -743,21 +745,3 @@ select.form-input option{background:var(--surface);color:var(--text)}
 .cvd-tags{display:flex;flex-wrap:wrap;gap:8px}
 .cvd-tags span{padding:4px 14px;border:1px solid #5b5bd6;border-radius:20px;background:#f1f1ff;color:#2b2b7a;font-weight:600;font-size:13px}
 .cvd-foot{position:absolute;left:44px;right:44px;bottom:22px;text-align:center;font-size:11px;letter-spacing:1px;color:#777;border-top:1px solid #ddd;padding-top:8px}
-
-
-
-/* =====================================================
-   COMPATIBILITY (older phones, in-app browsers)
-   ===================================================== */
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-button,a,summary,select{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-
-/* Fallback for the "inset" shorthand on older browsers */
-body::before,.preloader,.bg-blobs,.palette,.term,.photo-card,.photo-card::before,.photo-frame,.slide,.face,[data-tilt]::after{top:0;right:0;bottom:0;left:0}
-
-.palette,.term{-webkit-backdrop-filter:blur(6px)}
-
-/* If JavaScript fails to run, never leave the page blank */
-html.nojs-fallback .reveal{opacity:1!important;transform:none!important}
-html.nojs-fallback .bar span{width:var(--w)!important}
-html.nojs-fallback .preloader{display:none!important}
